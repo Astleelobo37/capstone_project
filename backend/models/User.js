@@ -21,7 +21,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    emailId: {
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
@@ -37,7 +37,15 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    }
+    },
+    DOB: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     sequelize: sequelizeInstance,

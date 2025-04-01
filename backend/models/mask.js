@@ -32,22 +32,16 @@ Mask.init(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    test_result_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'test_results',
-        key: 'id'
-      }
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id'
-      }
-    }
+
+   description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+   },
+    price: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+   },  
+
   },
   {
     sequelize: sequelizeInstance,

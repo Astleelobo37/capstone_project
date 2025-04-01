@@ -1,53 +1,39 @@
 "use strict";
-const sequelize = require('../config/database');
-const User = require('./User');
-const TestResult = require('./TestResult');
-const Mask = require('./mask');
+const sequelize = require("../config/database");
+const User = require("./user");
+const TestResult = require("./testResult");
+const Mask = require("./mask");
 //const RespiratoryMaskType = require('./RespiratoryMaskType');
 
 async function init() {
-    await User.sync();
-    await TestResult.sync();
-    await Mask.sync();
+  await User.sync();
+  await Mask.sync();
+  await TestResult.sync();
+
+  // Define associations
+  TestResult.belongsTo(User, {
+    foreignKey: "userid",
+  });
+
+  User.hasMany(TestResult, {
+    foreignKey: "userid",
+  });
+
+  // Add associations for Mask
+
+  TestResult.belongsTo(Mask, {
+    foreignKey: "maskid",
+  });
+
+  Mask.hasMany(TestResult, {
+    foreignKey: "maskid",
+  });
 }
 
 init();
-
-// Define associations
-TestResult.belongsTo(User, {
-    foreignKey: 'userid',
-    as: 'user'
-});
-
-User.hasMany(TestResult, {
-    foreignKey: 'userid',
-    as: 'testResults'
-});
-
-// Add associations for Mask
-Mask.belongsTo(User, {
-    foreignKey: 'user_id',
-    as: 'user'
-});
-
-Mask.belongsTo(TestResult, {
-    foreignKey: 'test_result_id',
-    as: 'testResult'
-});
-
-User.hasMany(Mask, {
-    foreignKey: 'user_id',
-    as: 'masks'
-});
-
-TestResult.hasMany(Mask, {
-    foreignKey: 'test_result_id',
-    as: 'masks'
-});
-
 module.exports = {
-    sequelize,
-    User,
-    TestResult,
-    Mask
-}; 
+  sequelize,
+  User,
+  TestResult,
+  Mask,
+};

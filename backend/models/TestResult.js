@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 let dbConnect = require("../dbConnect");
 const sequelizeInstance = dbConnect.Sequelize;
-const User = require('./User');
+const User = require('./user');
 
 class TestResult extends Model {}
 
@@ -31,15 +31,23 @@ TestResult.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    notes: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
+    status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
     clinical_notes: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-
+    maskid: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'masks',
+          key: 'id'
+        }
+      },
     }
 ,
   {
