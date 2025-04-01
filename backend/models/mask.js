@@ -2,10 +2,10 @@ const { DataTypes, Model } = require("sequelize");
 let dbConnect = require("../dbConnect");
 const sequelizeInstance = dbConnect.Sequelize;
 
-class User extends Model {}
+class Mask extends Model {}
 
 // Sequelize will create this table if it doesn't exist on startup
-User.init(
+Mask.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,38 +13,49 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    firstName: {
+    mask_type: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: {
-      type: DataTypes.STRING,
+    stock: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
-    emailId: {
+    serial_number: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true
+    },
+    order_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    test_result_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'test_results',
+        key: 'id'
       }
     },
-    password: {
-      type: DataTypes.STRING,
+    user_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    NHI: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     }
   },
   {
     sequelize: sequelizeInstance,
-    modelName: "users", // use lowercase plural format
+    modelName: "masks", // use lowercase plural format
     timestamps: true,
     freezeTableName: true,
   }
 );
 
-module.exports = User; 
+module.exports = Mask; 
+module.exports = Mask; 

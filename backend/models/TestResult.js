@@ -1,47 +1,54 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes, Model } = require("sequelize");
+let dbConnect = require("../dbConnect");
+const sequelizeInstance = dbConnect.Sequelize;
 const User = require('./User');
 
-const TestResult = sequelize.define('TestResult', {
+class TestResult extends Model {}
+
+// Sequelize will create this table if it doesn't exist on startup
+TestResult.init(
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
     },
-    userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
+    userid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     },
-    filePath: {
-        type: DataTypes.STRING,
-        allowNull: false
+    test_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
-    status: {
-        type: DataTypes.ENUM('pending', 'reviewed'),
-        defaultValue: 'pending'
+    result: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    doctorResponse: {
-        type: DataTypes.TEXT
+    notes: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    clinical_notes: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
     }
-}, {
+,
+  {
+    sequelize: sequelizeInstance,
+    modelName: "test_results", // use lowercase plural format
     timestamps: true,
-    createdAt: 'upload_date',
-    updatedAt: 'updated_at'
-});
+    freezeTableName: true,
+  }
+);
 
-// Define associations
-TestResult.belongsTo(User, {
-    foreignKey: 'userId',
-    as: 'user'
-});
-
-User.hasMany(TestResult, {
-    foreignKey: 'userId',
-    as: 'testResults'
-});
 
 module.exports = TestResult; 
