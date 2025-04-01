@@ -33,15 +33,14 @@ Mask.init(
       defaultValue: DataTypes.NOW,
     },
 
-   description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-   },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     price: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-   },  
-
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
   },
   {
     sequelize: sequelizeInstance,
@@ -51,5 +50,5 @@ Mask.init(
   }
 );
 
-module.exports = Mask; 
-module.exports = Mask; 
+module.exports = Mask;
+module.exports = Mask;
