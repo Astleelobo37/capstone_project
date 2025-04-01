@@ -1,54 +1,47 @@
-const { DataTypes, Model } = require("sequelize");
-let dbConnect = require("../dbConnect");
-const sequelizeInstance = dbConnect.Sequelize;
+const { DataTypes } = require('sequelize');
+const sequelize = require('../dbConnect').sequelize;
 
-class Mask extends Model {}
-
-// Sequelize will create this table if it doesn't exist on startup
-Mask.init(
-  {
+const Mask = sequelize.define('Masks', {
     id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    mask_type: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    maskType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'mask_type'
     },
     stock: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
     },
-    serial_number: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+    serialNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        field: 'serial_number'
     },
-    order_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
+    orderDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+        field: 'order_date'
     },
-
     description: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.TEXT,
+        allowNull: false
     },
     price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize: sequelizeInstance,
-    modelName: "masks", // use lowercase plural format
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    }
+}, {
     timestamps: true,
-    freezeTableName: true,
-  }
-);
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    freezeTableName: true
+});
 
-module.exports = Mask;
 module.exports = Mask;

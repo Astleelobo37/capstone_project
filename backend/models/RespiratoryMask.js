@@ -1,39 +1,39 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../dbConnect').sequelize;
-const User = require('./user');
 
-const TestResult = sequelize.define('TestResult', {
+const RespiratoryMask = sequelize.define('RespiratoryMask', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    userId: {
-        type: DataTypes.INTEGER,
+    maskType: {
+        type: DataTypes.STRING,
         allowNull: false,
-        field: 'userid',
-        references: {
-            model: 'Users',
-            key: 'id'
-        }
+        field: 'mask_type'
     },
-    testDate: {
+    stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    serialNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        field: 'serial_number'
+    },
+    orderDate: {
         type: DataTypes.DATE,
         allowNull: false,
-        field: 'test_date'
+        field: 'order_date'
     },
-    result: {
+    description: {
         type: DataTypes.TEXT,
         allowNull: false
     },
-    status: {
-        type: DataTypes.STRING,
+    price: {
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false
-    },
-    clinicalNotes: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-        field: 'clinical_notes'
     }
 }, {
     timestamps: true,
@@ -41,4 +41,4 @@ const TestResult = sequelize.define('TestResult', {
     updatedAt: 'updated_at'
 });
 
-module.exports = TestResult; 
+module.exports = RespiratoryMask; 

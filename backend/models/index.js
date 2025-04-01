@@ -3,37 +3,35 @@ const sequelize = require("../config/database");
 const User = require("./user");
 const TestResult = require("./testResult");
 const Mask = require("./mask");
-//const RespiratoryMaskType = require('./RespiratoryMaskType');
 
 async function init() {
-  await User.sync();
-  await Mask.sync();
-  await TestResult.sync();
+  try {
+    // Sync all models
+    await sequelize.sync({ force: true });
+    console.log('Database synced successfully');
 
-  // Define associations
-  TestResult.belongsTo(User, {
-    foreignKey: "userid",
-  });
+    // Define associations
+    TestResult.belongsTo(User, {
+      foreignKey: "userId",
+    });
 
-  User.hasMany(TestResult, {
-    foreignKey: "userid",
-  });
+    User.hasMany(TestResult, {
+      foreignKey: "userId",
+    });
 
-  // Add associations for Mask
-
-  TestResult.belongsTo(Mask, {
-    foreignKey: "maskid",
-  });
-
-  Mask.hasMany(TestResult, {
-    foreignKey: "maskid",
-  });
+    // Ensure Mask model is synced
+    await Mask.sync();
+    
+  } catch (error) {
+    console.error('Error initializing models:', error);
+  }
 }
 
 init();
+
 module.exports = {
   sequelize,
   User,
   TestResult,
-  Mask,
+  Mask
 };

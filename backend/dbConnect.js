@@ -50,5 +50,5 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 module.exports = {
-  Sequelize: sequelize
+  sequelize
 };

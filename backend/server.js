@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 require("dotenv").config();
 let dbConnect = require("./dbConnect");
+const initialiseDatabase = require("./init/initialiseDatabase");
 
 // Middleware
 app.use(cors());
@@ -32,12 +33,13 @@ app.use((err, req, res, next) => {
 
 // set port, listen for requests
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-}).on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-        console.error(`Port ${PORT} is already in use. Please try a different port.`);
-    } else {
-        console.error('Error starting server:', err);
-    }
+
+// Initialize database and start server
+dbConnect.sequelize.sync({ force: false }).then(() => {
+  console.log("Database synced");
+  initialiseDatabase().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}.`);
+    });
+  });
 });

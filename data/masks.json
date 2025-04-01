@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "mask_type": "F&P Simplus Full Face Mask",
+    "stock": 24,
+    "serial_number": "FP-FFM-SMP-23451",
+    "order_date": "2023-12-15T08:30:00.000Z",
+    "description": "Full face CPAP mask with RollFit seal technology for treating severe COPD. Suitable for GOLD 3-4 stage patients requiring high-pressure support.",
+    "price": 189.99
+  },
+  {
+    "id": 2,
+    "mask_type": "F&P Evora Nasal Mask",
+    "stock": 38,
+    "serial_number": "FP-NM-EVO-78623",
+    "order_date": "2024-01-10T10:15:00.000Z",
+    "description": "Compact nasal mask with CapFit headgear. Ideal for mild to moderate COPD (GOLD 1-2) patients who require overnight oxygen support.",
+    "price": 129.95
+  },
+  {
+    "id": 3,
+    "mask_type": "F&P Vitera Full Face Mask",
+    "stock": 18,
+    "serial_number": "FP-FFM-VIT-35678",
+    "order_date": "2024-02-05T14:45:00.000Z",
+    "description": "Full face mask with stability bar for high-pressure NIV therapy. Recommended for severe COPD exacerbations and GOLD 3-4 patients.",
+    "price": 199.5
+  },
+  {
+    "id": 4,
+    "mask_type": "F&P Brevida Nasal Pillows Mask",
+    "stock": 42,
+    "serial_number": "FP-NPM-BRV-12456",
+    "order_date": "2024-01-22T09:30:00.000Z",
+    "description": "Minimally invasive nasal pillows with AirPillow seal. Best for GOLD 1-2 COPD patients who experience claustrophobia with larger masks.",
+    "price": 119.99
+  },
+  {
+    "id": 5,
+    "mask_type": "F&P Evora Full Face Mask",
+    "stock": 15,
+    "serial_number": "FP-FFM-EVO-98765",
+    "order_date": "2024-03-01T11:20:00.000Z",
+    "description": "Compact full face mask with dynamic support. Designed for COPD patients requiring 24-hour ventilation support with minimal pressure points.",
+    "price": 209.95
+  },
+  {
+    "id": 6,
+    "mask_type": "F&P Eson 2 Nasal Mask",
+    "stock": 31,
+    "serial_number": "FP-NM-ESN-45632",
+    "order_date": "2023-11-28T13:10:00.000Z",
+    "description": "Nasal mask with RollFit seal and easy-fit headgear. Appropriate for moderate COPD patients (GOLD 2-3) requiring nighttime ventilation.",
+    "price": 139.5
+  },
+  {
+    "id": 7,
+    "mask_type": "F&P Oracle HC452 Oral Mask",
+    "stock": 12,
+    "serial_number": "FP-OM-ORC-56723",
+    "order_date": "2024-02-18T15:45:00.000Z",
+    "description": "Specialized oral-only interface for COPD patients who are unable to breathe through their nose or have nasal obstruction. Compatible with BiPAP therapy.",
+    "price": 179.99
+  },
+  {
+    "id": 8,
+    "mask_type": "F&P Nivairo Hospital NIV Mask",
+    "stock": 8,
+    "serial_number": "FP-HNM-NIV-78901",
+    "order_date": "2024-03-15T09:15:00.000Z",
+    "description": "Hospital-grade non-vented NIV mask for acute COPD exacerbation treatment. Designed for intensive care settings with anti-asphyxiation valve.",
+    "price": 275.0
+  },
+  {
+    "id": 9,
+    "mask_type": "F&P Pilairo Q Nasal Pillows Mask",
+    "stock": 27,
+    "serial_number": "FP-NPM-PIQ-35791",
+    "order_date": "2023-10-10T14:20:00.000Z",
+    "description": "Ultra-lightweight nasal pillows system with auto-adjusting AirPillow seal. Suitable for GOLD 1-2 COPD patients who are active sleepers.",
+    "price": 124.95
+  },
+  {
+    "id": 10,
+    "mask_type": "F&P FlexiFit 432 Full Face Hospital Mask",
+    "stock": 10,
+    "serial_number": "FP-FFM-FLX-24680",
+    "order_date": "2024-01-05T16:30:00.000Z",
+    "description": "Hospital-grade full face mask with under-chin design for severe COPD patients (GOLD 4) requiring continuous mechanical ventilation during exacerbations.",
+    "price": 249.99
+  },
+  {
+    "id": 11,
+    "mask_type": "F&P Forma Full Face Mask",
+    "stock": 16,
+    "serial_number": "FP-FFM-FRM-34567",
+    "order_date": "2024-03-10T08:45:00.000Z",
+    "description": "Full face mask with FlexiFoam cushion technology providing enhanced seal for GOLD 3-4 COPD patients who move frequently during sleep.",
+    "price": 195.5
+  },
+  {
+    "id": 12,
+    "mask_type": "F&P Zest Q Nasal Mask",
+    "stock": 22,
+    "serial_number": "FP-NM-ZST-67890",
+    "order_date": "2023-11-15T13:20:00.000Z",
+    "description": "Compact nasal mask with premium headgear and frosted silicone seal. Ideal for moderate COPD patients (GOLD 2) requiring consistent nightly therapy.",
+    "price": 134.99
+  },
+  {
+    "id": 13,
+    "mask_type": "F&P RT045 Hospital Ventilation Mask",
+    "stock": 5,
+    "serial_number": "FP-HVM-RT45-12345",
+    "order_date": "2024-02-28T16:00:00.000Z",
+    "description": "Specialized hospital ventilation mask with multiple ports for severe acute COPD exacerbations. Designed for ICU/emergency department use with high-flow oxygen.",
+    "price": 295.0
+  },
+  {
+    "id": 14,
+    "mask_type": "F&P Evora Nano Nasal Mask",
+    "stock": 30,
+    "serial_number": "FP-NM-EVN-54321",
+    "order_date": "2024-03-20T10:30:00.000Z",
+    "description": "Ultra-compact nasal mask with minimal contact designed for GOLD 1-2 COPD patients who are new to therapy or have mild symptoms only.",
+    "price": 149.95
+  },
+  {
+    "id": 15,
+    "mask_type": "F&P Visairo Hospital NIV Full Face Mask",
+    "stock": 6,
+    "serial_number": "FP-HNIV-VIS-97531",
+    "order_date": "2024-01-15T09:45:00.000Z",
+    "description": "Advanced hospital full face NIV mask with interchangeable seals for acute respiratory failure in end-stage COPD (GOLD 4). Features adjustable forehead support.",
+    "price": 325.0
+  },
+  {
+    "id": 16,
+    "mask_type": "F&P Opus 360 Nasal Pillows Mask",
+    "stock": 35,
+    "serial_number": "FP-NPM-OP3-24680",
+    "order_date": "2023-12-05T11:15:00.000Z",
+    "description": "360-degree rotating nasal pillows with minimalist headgear. Perfect for early-stage COPD patients (GOLD 1) who require occasional nighttime oxygen support.",
+    "price": 135.5
+  },
+  {
+    "id": 17,
+    "mask_type": "F&P F1 Total Face Mask",
+    "stock": 4,
+    "serial_number": "FP-TFM-F1-86420",
+    "order_date": "2024-02-10T14:00:00.000Z",
+    "description": "Total face ventilation mask covering eyes, nose and mouth for severe COPD patients (GOLD 4) with facial skin breakdown from conventional masks. Hospital use.",
+    "price": 349.99
+  },
+  {
+    "id": 18,
+    "mask_type": "F&P Eson 3 Nasal Mask",
+    "stock": 20,
+    "serial_number": "FP-NM-ES3-13579",
+    "order_date": "2024-03-25T09:00:00.000Z",
+    "description": "Latest generation nasal mask with enhanced RollFit+ seal technology. Suitable for GOLD 2-3 COPD patients requiring consistent CPAP/BiPAP therapy.",
+    "price": 159.95
+  },
+  {
+    "id": 19,
+    "mask_type": "F&P RT046 Pediatric Hospital NIV Mask",
+    "stock": 8,
+    "serial_number": "FP-PHNM-RT46-75319",
+    "order_date": "2024-01-30T15:30:00.000Z",
+    "description": "Specialized pediatric hospital NIV mask for younger COPD patients (rare juvenile cases) or small adults with difficult fit issues.",
+    "price": 265.0
+  },
+  {
+    "id": 20,
+    "mask_type": "F&P Vitera+ Advanced Full Face Mask",
+    "stock": 12,
+    "serial_number": "FP-FFM-VIT+-98765",
+    "order_date": "2024-03-30T10:45:00.000Z",
+    "description": "Premium full face mask with VentiSeal technology for optimal leak prevention. Designed for severe and very severe COPD patients (GOLD 3-4) requiring high-pressure BiPAP therapy with close monitoring.",
+    "price": 235.95
+  }
+] 

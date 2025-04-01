@@ -1,58 +1,49 @@
-const { DataTypes, Model } = require("sequelize");
-let dbConnect = require("../dbConnect");
-const sequelizeInstance = dbConnect.Sequelize;
+const { DataTypes } = require('sequelize');
+const sequelize = require('../dbConnect').sequelize;
 
-class User extends Model {}
-
-// Sequelize will create this table if it doesn't exist on startup
-User.init(
-  {
+const User = sequelize.define('User', {
     id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
     email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true
-      }
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+            isEmail: true
+        }
     },
     password: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    role: {
+        type: DataTypes.ENUM('patient', 'doctor', 'admin'),
+        defaultValue: 'patient'
     },
     NHI: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
     },
     DOB: {
-      type: DataTypes.DATE,
-      allowNull: false,
+        type: DataTypes.DATEONLY,
+        allowNull: false
     },
     address: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize: sequelizeInstance,
-    modelName: "users", // use lowercase plural format
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
     timestamps: true,
-    freezeTableName: true,
-  }
-);
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+});
 
 module.exports = User; 
