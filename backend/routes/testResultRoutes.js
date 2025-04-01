@@ -1,23 +1,40 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const { authenticateToken } = require('../middleware/auth');
-const { uploadTestResult, getTestResults } = require('../controllers/testResultController');
+const Controllers = require("../controllers");
 
-// File upload configuration
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
+// GET all test results
+router.get("/", (req, res) => {
+  Controllers.testResultController.getTestResults(res);
 });
 
-const upload = multer({ storage: storage });
+// GET test result by ID
+router.get("/:id", (req, res) => {
+  Controllers.testResultController.getTestResultDetails(req, res);
+});
 
-router.post('/upload', authenticateToken, upload.single('file'), uploadTestResult);
-router.get('/', authenticateToken, getTestResults);
+// GET test results by user ID
+router.get("/user/:userId", (req, res) => {
+  Controllers.testResultController.getUserTestResults(req, res);
+});
+
+// GET test results by status
+router.get("/status/:status", (req, res) => {
+  Controllers.testResultController.getTestResultsByStatus(req, res);
+});
+
+// POST create new test result
+router.post("/", (req, res) => {
+  Controllers.testResultController.createTestResult(req.body, res);
+});
+
+// PUT update test result
+router.put("/:id", (req, res) => {
+  Controllers.testResultController.updateTestResult(req, res);
+});
+
+// DELETE test result
+router.delete("/:id", (req, res) => {
+  Controllers.testResultController.deleteTestResult(req, res);
+});
 
 module.exports = router; 

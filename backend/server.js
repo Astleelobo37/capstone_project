@@ -3,9 +3,9 @@ const cors = require('cors');
 const path = require('path');
 
 // Import routes
-const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const maskRoutes = require('./routes/maskRoutes');
 const testResultRoutes = require('./routes/testResultRoutes');
-const respiratoryMaskRoutes = require('./routes/respiratoryMaskRoutes');
 
 const app = express();
 
@@ -15,9 +15,9 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/masks', maskRoutes);
 app.use('/api/test-results', testResultRoutes);
-app.use('/api/respiratory-masks', respiratoryMaskRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
