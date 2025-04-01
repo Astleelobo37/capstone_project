@@ -4,7 +4,7 @@ require('dotenv').config();
 const sequelize = new Sequelize(
     'healthcare_portal',
     'root',
-    '', // Add your MySQL password here
+    'Leonild2137', // Add your MySQL password here
     {
         host: 'localhost',
         dialect: 'mysql',

@@ -3,13 +3,12 @@ const sequelize = require('../config/database');
 const User = require('./User');
 const TestResult = require('./TestResult');
 const Mask = require('./mask');
-const RespiratoryMaskType = require('./RespiratoryMaskType');
+//const RespiratoryMaskType = require('./RespiratoryMaskType');
 
 async function init() {
     await User.sync();
     await TestResult.sync();
     await Mask.sync();
-    await RespiratoryMaskType.sync();
 }
 
 init();
@@ -50,6 +49,5 @@ module.exports = {
     sequelize,
     User,
     TestResult,
-    Mask,
-    RespiratoryMaskType
+    Mask
 }; 
