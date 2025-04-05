@@ -1,21 +1,81 @@
 "use strict";
-const Models = require("../models");
+const { Mask } = require('../models');
 
-// finds all respiratory masks in DB, then sends array as response
-const getMasks = (res) => {
-  Models.RespiratoryMask.findAll({})
-    .then((data) => {
-      res.send({ result: 200, data: data });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ result: 500, error: err.message });
+// Get all masks
+const getAllMasks = async (req, res) => {
+  try {
+    const masks = await Mask.findAll();
+    return res.status(200).json(masks);
+  } catch (error) {
+    console.error('Error fetching masks:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Get mask by ID
+const getMaskById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const mask = await Mask.findByPk(id);
+
+    if (!mask) {
+      return res.status(404).json({ message: 'Mask not found' });
+    }
+
+    return res.status(200).json(mask);
+  } catch (error) {
+    console.error('Error fetching mask:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Filter masks by COPD severity level
+const getMasksBySeverity = async (req, res) => {
+  try {
+    const { severity } = req.params;
+    
+    if (!severity || !['1', '2', '3', '4'].includes(severity)) {
+      return res.status(400).json({ message: 'Invalid severity level' });
+    }
+
+    const masks = await Mask.findAll();
+    
+    // Filter masks that contain the specified GOLD level in their description
+    const filteredMasks = masks.filter(mask => {
+      return mask.description.includes(`GOLD ${severity}`);
     });
+
+    return res.status(200).json(filteredMasks);
+  } catch (error) {
+    console.error('Error filtering masks by severity:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Update mask stock
+const updateMaskStock = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { stock } = req.body;
+
+    const mask = await Mask.findByPk(id);
+
+    if (!mask) {
+      return res.status(404).json({ message: 'Mask not found' });
+    }
+
+    await mask.update({ stock });
+
+    return res.status(200).json({ message: 'Mask stock updated successfully', mask });
+  } catch (error) {
+    console.error('Error updating mask stock:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
 };
 
 // uses JSON from request body to create new respiratory mask in DB
 const createMask = (data, res) => {
-  Models.RespiratoryMask.create(data)
+  Mask.create(data)
     .then((data) => {
       res.send({ result: 200, data: data });
     })
@@ -27,7 +87,7 @@ const createMask = (data, res) => {
 
 // uses JSON from request body to update respiratory mask ID from params
 const updateMask = (req, res) => {
-  Models.RespiratoryMask.update(req.body, {
+  Mask.update(req.body, {
     where: { id: req.params.id },
     returning: true,
   })
@@ -42,7 +102,7 @@ const updateMask = (req, res) => {
 
 // deletes respiratory mask matching ID from params
 const deleteMask = (req, res) => {
-  Models.RespiratoryMask.destroy({ where: { id: req.params.id } })
+  Mask.destroy({ where: { id: req.params.id } })
     .then((data) => {
       res.send({ result: 200, data: data });
     })
@@ -52,23 +112,13 @@ const deleteMask = (req, res) => {
     });
 };
 
-// finds respiratory mask by ID with all details
-const getMaskDetails = (req, res) => {
-  Models.RespiratoryMask.findByPk(req.params.id)
-    .then((data) => res.send({ result: 200, data: data }))
-    .catch((err) => {
-      console.log(err);
-      res.send({ result: 500, error: err.message });
-    });
-};
-
 // finds respiratory masks by price range
 const getMasksByPriceRange = (req, res) => {
   const { minPrice, maxPrice } = req.query;
-  Models.RespiratoryMask.findAll({
+  Mask.findAll({
     where: {
       price: {
-        [Models.Sequelize.Op.between]: [minPrice, maxPrice]
+        [Mask.sequelize.Op.between]: [minPrice, maxPrice]
       }
     }
   })
@@ -80,10 +130,12 @@ const getMasksByPriceRange = (req, res) => {
 };
 
 module.exports = {
-  getMasks,
+  getAllMasks,
+  getMaskById,
+  getMasksBySeverity,
+  updateMaskStock,
   createMask,
   updateMask,
   deleteMask,
-  getMaskDetails,
   getMasksByPriceRange
 }; 

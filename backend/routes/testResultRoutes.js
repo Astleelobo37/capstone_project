@@ -1,40 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const Controllers = require("../controllers");
+const testResultController = require("../controllers/testResultController");
+const authController = require("../controllers/authController");
 
-// GET all test results
-router.get("/", (req, res) => {
-  Controllers.testResultController.getTestResults(res);
-});
+// Public routes
+router.get("/", testResultController.getAllTestResults);
+router.get("/status", testResultController.getTestResultsByStatus);
+router.get("/:id", testResultController.getTestResultDetails);
 
-// GET test result by ID
-router.get("/:id", (req, res) => {
-  Controllers.testResultController.getTestResultDetails(req, res);
-});
+// User-specific routes (protected)
+router.get("/user/:userId", authController.verifyToken, testResultController.getTestResultsByUserId);
+router.get("/:userId/latest", authController.verifyToken, testResultController.getLatestTestResultByUserId);
 
-// GET test results by user ID
-router.get("/user/:userId", (req, res) => {
-  Controllers.testResultController.getUserTestResults(req, res);
-});
-
-// GET test results by status
-router.get("/status/:status", (req, res) => {
-  Controllers.testResultController.getTestResultsByStatus(req, res);
-});
-
-// POST create new test result
-router.post("/", (req, res) => {
-  Controllers.testResultController.createTestResult(req.body, res);
-});
-
-// PUT update test result
-router.put("/:id", (req, res) => {
-  Controllers.testResultController.updateTestResult(req, res);
-});
-
-// DELETE test result
-router.delete("/:id", (req, res) => {
-  Controllers.testResultController.deleteTestResult(req, res);
-});
+// Test result creation and management (protected)
+router.post("/", authController.verifyToken, testResultController.createTestResult);
+router.post("/upload", authController.verifyToken, testResultController.uploadTestResult);
+router.put("/:id", authController.verifyToken, testResultController.updateTestResult);
+router.delete("/:id", authController.verifyToken, testResultController.deleteTestResult);
 
 module.exports = router; 

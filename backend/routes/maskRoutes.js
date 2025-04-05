@@ -1,35 +1,18 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Controllers = require("../controllers");
+const maskController = require('../controllers/maskController');
+const authController = require('../controllers/authController');
 
-// GET all masks
-router.get("/", (req, res) => {
-  Controllers.maskController.getMasks(res);
-});
+// Public routes
+router.get('/', maskController.getAllMasks);
+router.get('/:id', maskController.getMaskById);
+router.get('/severity/:severity', maskController.getMasksBySeverity);
+router.get('/price-range', maskController.getMasksByPriceRange);
 
-// GET mask by ID
-router.get("/:id", (req, res) => {
-  Controllers.maskController.getMaskDetails(req, res);
-});
-
-// GET masks by user ID
-router.get("/user/:userId", (req, res) => {
-  Controllers.maskController.getUserMasks(req, res);
-});
-
-// POST create new mask
-router.post("/", (req, res) => {
-  Controllers.maskController.createMask(req.body, res);
-});
-
-// PUT update mask
-router.put("/:id", (req, res) => {
-  Controllers.maskController.updateMask(req, res);
-});
-
-// DELETE mask
-router.delete("/:id", (req, res) => {
-  Controllers.maskController.deleteMask(req, res);
-});
+// Protected routes (require authentication)
+router.put('/:id/stock', authController.verifyToken, maskController.updateMaskStock);
+router.post('/', authController.verifyToken, maskController.createMask);
+router.put('/:id', authController.verifyToken, maskController.updateMask);
+router.delete('/:id', authController.verifyToken, maskController.deleteMask);
 
 module.exports = router; 

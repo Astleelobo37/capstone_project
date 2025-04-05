@@ -16,13 +16,16 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to Healthcare Portal API." });
 });
 
-let userRoutes = require('./routes/userRoutes');
+// Import routes
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const maskRoutes = require('./routes/maskRoutes');
+const testResultRoutes = require('./routes/testResultRoutes');
+
+// Use routes
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-
-let maskRoutes = require('./routes/maskRoutes');
 app.use('/api/masks', maskRoutes);
-
-let testResultRoutes = require('./routes/testResultRoutes');
 app.use('/api/test-results', testResultRoutes);
 
 // Error handling middleware
