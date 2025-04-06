@@ -8,7 +8,7 @@ const sequelize = new Sequelize(
     {
         host: 'localhost',
         dialect: 'mysql',
-        logging: false, // Set to console.log to see SQL queries
+        logging: console.log, // Enable SQL query logging
         pool: {
             max: 5,
             min: 0,

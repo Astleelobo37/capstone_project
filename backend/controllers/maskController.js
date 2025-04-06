@@ -4,11 +4,16 @@ const { Mask } = require('../models');
 // Get all masks
 const getAllMasks = async (req, res) => {
   try {
+    console.log('Received request for all masks');
     const masks = await Mask.findAll();
+    console.log('Found masks:', JSON.stringify(masks, null, 2));
+    if (!masks || masks.length === 0) {
+      console.log('No masks found in database');
+    }
     return res.status(200).json(masks);
   } catch (error) {
     console.error('Error fetching masks:', error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 

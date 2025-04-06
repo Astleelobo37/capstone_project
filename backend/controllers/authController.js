@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const JWT_EXPIRATION = '24h';
@@ -8,26 +9,42 @@ const JWT_EXPIRATION = '24h';
 // Login a user
 exports.login = async (req, res) => {
   try {
-    const { email, firstName, lastName, NHI, password } = req.body;
+    console.log('Login request received:', req.body);
+    const { email, NHI, password } = req.body;
 
-    // Find user by email
-    const user = await User.findOne({ where: { email } });
+    if (!email && !(NHI || password)) {
+      console.log('No email or NHI provided');
+      return res.status(400).json({ message: 'Email & password or NHI & email required' });
+    }
+
+
+    // Find user by either email or NHI
+    console.log('Searching for user with:', { email, NHI });
+    const user = await User.findOne({
+      where: 
+     { email },
+      });
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      console.log('No user found');
+      return res.status(401).json({ message: 'User not found' });
     }
 
-    // Validate name and NHI
-    if (user.firstName !== firstName || user.lastName !== lastName || user.NHI !== NHI) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+    console.log('User found:', user.email);
 
-    // Compare hashed password
+    // Validate password
+    if (password){
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      console.log('Invalid password');
+      return res.status(401).json({ message: 'Invalid password' });
     }
+  }else if (NHI){
+    if (NHI != user.NHI) {
+      console.log('Invalid NHI');
+      return res.status(401).json({ message: 'Invalid NHI' });
+    }
+  }
 
     // Create token
     const token = jwt.sign(
@@ -45,12 +62,13 @@ exports.login = async (req, res) => {
       role: user.role,
       NHI: user.NHI,
       DOB: user.DOB,
-      address: user.address
+      address: user.address,
+      token
     };
 
+    console.log('Login successful for user:', user.email);
     return res.status(200).json({
       message: 'Login successful',
-      token,
       user: userWithoutPassword
     });
   } catch (error) {
@@ -77,8 +95,8 @@ exports.register = async (req, res) => {
     }
 
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    //const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
     const newUser = await User.create({

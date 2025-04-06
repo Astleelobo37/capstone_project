@@ -29,6 +29,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../context/UserContext';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -51,7 +52,6 @@ const severityColors = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const [masks, setMasks] = useState([]);
-  const [user, setUser] = useState(null);
   const [testResults, setTestResults] = useState(null);
   const [openUpload, setOpenUpload] = useState(false);
   const [uploadFile, setUploadFile] = useState(null);
@@ -60,33 +60,68 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterSeverity, setFilterSeverity] = useState('all');
+  const {currentUser} = useUserContext()
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    setUser(userData);
+    console.log('Dashboard useEffect triggered');
+    
+    
+    if (!currentUser) {
+      console.log('No user data found, redirecting to login');
+      navigate('/login');
+      return;
+    }
+    
+    
+    console.log('Starting to fetch masks...');
     fetchMasks();
-    fetchTestResults(userData?.id);
+    console.log('Starting to fetch test results...');
+    fetchTestResults(currentUser.id);
   }, []);
 
   const fetchMasks = async () => {
     try {
+      console.log('Making API call to /api/masks');
       const response = await fetch('/api/masks');
+      console.log('Masks API response status:', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      console.log('Received masks data:', data);
+      if (!Array.isArray(data)) {
+        throw new Error('Expected array of masks but got:', typeof data);
+      }
       setMasks(data);
     } catch (err) {
-      setError('Failed to fetch masks');
+      console.error('Error in fetchMasks:', err);
+      setError('Failed to fetch masks: ' + err.message);
     }
   };
 
   const fetchTestResults = async (userId) => {
-    if (!userId) return;
+    if (!userId) {
+      console.log('No user ID provided for test results');
+      return;
+    }
     try {
-      const response = await fetch(`/api/test-results/${userId}/latest`);
+      console.log('Making API call to /api/test-results/' + userId + '/latest');
+      const response = await fetch(`/api/test-results/${userId}/latest`,{
+        headers: {
+          "authorization":`token ${currentUser.token}`,
+        },
+      });
+      console.log('Test results API response status:', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      console.log('Received test results data:', data);
       setTestResults(data);
       setSeverity(data.status);
     } catch (err) {
-      setError('Failed to fetch test results');
+      console.error('Error in fetchTestResults:', err);
+      setError('Failed to fetch test results: ' + err.message);
     }
   };
 
@@ -167,7 +202,7 @@ const Dashboard = () => {
           >
             <MenuItem disabled>
               <Typography variant="body2">
-                {user?.name}
+                {currentUser?.name}
               </Typography>
             </MenuItem>
             <MenuItem onClick={handleLogout}>
@@ -203,27 +238,32 @@ const Dashboard = () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={`/mask-images/${mask.serial_number}.jpg`}
-                  alt={mask.mask_type}
-                  onError={(e) => {
-                    e.target.src = '/mask-placeholder.jpg';
+                  image={mask.imageUrl || 'https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop'}
+                  alt={mask.maskType || mask.mask_type}
+                  sx={{
+                    objectFit: 'cover',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'scale(1.05)'
+                    }
                   }}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h6" component="div">
-                    {mask.mask_type}
+                  <Typography variant="h6" component="div" gutterBottom>
+                    {mask.maskType || mask.mask_type}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
                     {mask.description}
                   </Typography>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+                    <Chip
+                      label={`Stock: ${mask.stock}`}
+                      color={mask.stock > 10 ? 'success' : 'error'}
+                      size="small"
+                    />
                     <Typography variant="h6" color="primary">
                       ${mask.price}
                     </Typography>
-                    <Chip
-                      label={`Stock: ${mask.stock}`}
-                      color={mask.stock > 0 ? "success" : "error"}
-                    />
                   </Box>
                 </CardContent>
               </StyledCard>

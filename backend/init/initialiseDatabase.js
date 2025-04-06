@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs/dist/bcrypt");
 const Models = require("../models");
 const fs = require('fs');
 const path = require('path');
@@ -31,6 +32,7 @@ async function populateDatabase() {
         const users = await loadUsers();
         console.log(`Found ${users.length} users to add`);
         for (const user of users) {
+            user.password = await bcrypt.hash(user.password, 10)
             await Models.User.create(user);
         }
         console.log(`Added ${users.length} users`);

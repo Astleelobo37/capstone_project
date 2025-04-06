@@ -36,6 +36,11 @@ const Mask = sequelize.define('Masks', {
     price: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
+    },
+    imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'image_url'
     }
 }, {
     timestamps: true,

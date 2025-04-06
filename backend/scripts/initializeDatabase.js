@@ -1,86 +1,54 @@
 const fs = require('fs');
 const path = require('path');
-const { sequelize, User, TestResult, Mask } = require('../models');
+const sequelize = require('../config/database');
+const { User, TestResult, Mask } = require('../models');
+const bcrypt = require('bcryptjs');
 
-async function initializeDatabase() {
+const initializeDatabase = async () => {
   try {
     // Sync all models
     await sequelize.sync({ force: true });
     console.log('Database synced successfully');
 
-    // Load and parse JSON data
-    const usersData = JSON.parse(
-      fs.readFileSync(path.join(__dirname, '../../data/users.json'), 'utf8')
-    );
-    const testResultsData = JSON.parse(
-      fs.readFileSync(path.join(__dirname, '../../data/testResults.json'), 'utf8')
-    );
-    const masksData = JSON.parse(
-      fs.readFileSync(path.join(__dirname, '../../data/masks.json'), 'utf8')
-    );
+    // Load JSON data
+    const usersData = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf8'));
+    const testResultsData = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/testResults.json'), 'utf8'));
+    const masksData = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/masks.json'), 'utf8'));
 
-    // Transform user data
-    const transformedUsers = usersData.map(user => ({
-      email: user.email,
-      password: user.password,
-      name: `${user.firstName} ${user.lastName}`,
-      role: 'patient',
-      NHI: user.NHI,
-      DOB: user.DOB,
-      address: user.address
+    // Hash passwords for users
+    const usersWithHashedPasswords = await Promise.all(usersData.map(async (user) => {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('password123', salt); // Using a default password for all users
+      return {
+        ...user,
+        password: hashedPassword
+      };
     }));
 
-    // Transform test results data
-    const transformedTestResults = testResultsData.map(result => ({
-      userId: result.userid,
-      testDate: result.test_date,
-      result: result.result,
-      status: result.status,
-      clinicalNotes: result.clinical_notes
-    }));
-
-    // Transform masks data
-    const transformedMasks = masksData.map(mask => ({
-      maskType: mask.mask_type,
-      stock: mask.stock,
-      serialNumber: mask.serial_number,
-      orderDate: mask.order_date,
-      description: mask.description,
-      price: mask.price
-    }));
-
-    // Create users with update on duplicate
-    await User.bulkCreate(transformedUsers, {
-      updateOnDuplicate: ['password', 'name', 'role', 'NHI', 'DOB', 'address']
+    // Create users
+    await User.bulkCreate(usersWithHashedPasswords, {
+      updateOnDuplicate: ['password', 'firstName', 'lastName', 'role', 'NHI', 'DOB', 'address']
     });
-    console.log('Users created/updated successfully');
+    console.log('Users created successfully');
 
-    // Create test results with update on duplicate
-    await TestResult.bulkCreate(transformedTestResults, {
+    // Create test results
+    await TestResult.bulkCreate(testResultsData, {
       updateOnDuplicate: ['result', 'status', 'clinicalNotes']
     });
-    console.log('Test results created/updated successfully');
+    console.log('Test results created successfully');
 
-    // Create masks with update on duplicate
-    await Mask.bulkCreate(transformedMasks, {
+    // Create masks
+    await Mask.bulkCreate(masksData, {
       updateOnDuplicate: ['stock', 'description', 'price']
     });
-    console.log('Masks created/updated successfully');
+    console.log('Masks created successfully');
 
     console.log('Database initialized successfully');
   } catch (error) {
     console.error('Error initializing database:', error);
-    throw error;
+  } finally {
+    await sequelize.close();
   }
-}
+};
 
-// Run the initialization
-initializeDatabase()
-  .then(() => {
-    console.log('Database initialization completed');
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error('Database initialization failed:', error);
-    process.exit(1);
-  }); 
+initializeDatabase(); 

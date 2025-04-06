@@ -3,6 +3,7 @@ import './App.css'
 import Login from './components/Login'
 import Register from './components/Register'
 import Dashboard from './components/Dashboard'
+import { UserProvider } from './context/UserContext'
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -13,6 +14,7 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <Router>
+      <UserProvider>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -28,6 +30,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         {/* Add more routes here as needed */}
       </Routes>
+      </UserProvider>
     </Router>
   )
 }

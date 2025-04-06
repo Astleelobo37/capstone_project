@@ -25,6 +25,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../context/UserContext';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -91,6 +92,8 @@ const Login = () => {
   const [resetEmail, setResetEmail] = useState('');
   const [resetNHI, setResetNHI] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [loginMethod, setLoginMethod] = useState('NHI'); // 'NHI' or 'password'
+  const {handleUpdateUser} = useUserContext();
 
   const handleInputChange = (e) => {
     setFormData({
@@ -100,14 +103,27 @@ const Login = () => {
   };
 
   const validateForm = () => {
-    if (!formData.email || !formData.firstName || !formData.lastName || !formData.NHI || !formData.password) {
-      setError('All fields are required');
+    if (!formData.email) {
+      setError('Email is required');
       return false;
     }
-    if (!/^NHI\d{7}$/.test(formData.NHI)) {
-      setError('NHI must be in format NHI followed by 7 digits');
-      return false;
+
+    if (loginMethod === 'NHI') {
+      if (!formData.NHI) {
+        setError('NHI number is required');
+        return false;
+      }
+      if (!/^NHI\d{7}$/.test(formData.NHI)) {
+        setError('NHI must be in format NHI followed by 7 digits');
+        return false;
+      }
+    } else {
+      if (!formData.password) {
+        setError('Password is required');
+        return false;
+      }
     }
+
     return true;
   };
 
@@ -117,29 +133,50 @@ const Login = () => {
 
     setLoading(true);
     try {
+      console.log('Attempting login with:', {
+        email: formData.email,
+        NHI: loginMethod === 'NHI' ? formData.NHI : undefined,
+        password: loginMethod === 'password' ? formData.password : undefined
+      });
+
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          email: formData.email,
+          NHI: loginMethod === 'NHI' ? formData.NHI : undefined,
+          password: loginMethod === 'password' ? formData.password : undefined
+        }),
       });
 
-      const data = await response.json();
+      console.log('Login response status:', response.status);
+      console.log('Login response headers:', response.headers);
+      
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+      
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        throw new Error('Invalid response from server');
+      }
 
       if (!response.ok) {
         throw new Error(data.message || 'Invalid credentials');
       }
 
       setSuccessMessage('Login successful! Redirecting to dashboard...');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      handleUpdateUser(data.user)
       
-      // Delay navigation to show success message
       setTimeout(() => {
         navigate('/dashboard');
       }, 2000);
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -186,27 +223,23 @@ const Login = () => {
           Patient Login
         </Typography>
         
+        <Box sx={{ mb: 2 }}>
+          <Button
+            variant={loginMethod === 'NHI' ? 'contained' : 'outlined'}
+            onClick={() => setLoginMethod('NHI')}
+            sx={{ mr: 1 }}
+          >
+            Login with NHI
+          </Button>
+          <Button
+            variant={loginMethod === 'password' ? 'contained' : 'outlined'}
+            onClick={() => setLoginMethod('password')}
+          >
+            Login with Password
+          </Button>
+        </Box>
+
         <Form onSubmit={handleLogin}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            label="First Name"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleInputChange}
-            autoComplete="given-name"
-          />
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            label="Last Name"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleInputChange}
-            autoComplete="family-name"
-          />
           <TextField
             variant="outlined"
             required
@@ -217,175 +250,107 @@ const Login = () => {
             onChange={handleInputChange}
             autoComplete="email"
           />
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            label="NHI Number"
-            name="NHI"
-            value={formData.NHI}
-            onChange={handleInputChange}
-            autoComplete="off"
-            helperText="Format: NHI followed by 7 digits"
-          />
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <OutlinedInput
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
+
+          {loginMethod === 'NHI' ? (
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              label="NHI Number"
+              name="NHI"
+              value={formData.NHI}
               onChange={handleInputChange}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
+              autoComplete="off"
+              helperText="Format: NHI followed by 7 digits"
             />
-          </FormControl>
-          
+          ) : (
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <OutlinedInput
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
+          )}
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            size="large"
-            sx={{
-              mt: 3,
-              mb: 2,
-              height: '48px',
-              background: 'linear-gradient(45deg, #2196F3 30%, #4CAF50 90%)',
-              '&:hover': {
-                background: 'linear-gradient(45deg, #1976D2 30%, #388E3C 90%)'
-              }
-            }}
             disabled={loading}
+            sx={{ mt: 2, mb: 2 }}
           >
             {loading ? <CircularProgress size={24} /> : 'Sign In'}
           </Button>
-          
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+
+          <Box sx={{ textAlign: 'center' }}>
             <Link
               component="button"
               variant="body2"
               onClick={() => setOpenForgotPassword(true)}
-              sx={{
-                textDecoration: 'none',
-                '&:hover': {
-                  textDecoration: 'underline'
-                }
-              }}
             >
               Forgot password?
             </Link>
-            <Link
-              component="button"
-              variant="body2"
-              onClick={() => navigate('/register')}
-              sx={{
-                textDecoration: 'none',
-                '&:hover': {
-                  textDecoration: 'underline'
-                }
-              }}
-            >
-              Create Account
-            </Link>
           </Box>
         </Form>
+
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {successMessage && (
+          <Alert severity="success" sx={{ mt: 2 }}>
+            {successMessage}
+          </Alert>
+        )}
+
+        <Dialog open={openForgotPassword} onClose={() => setOpenForgotPassword(false)}>
+          <DialogTitle>Reset Password</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Email Address"
+              type="email"
+              fullWidth
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="NHI Number"
+              fullWidth
+              value={resetNHI}
+              onChange={(e) => setResetNHI(e.target.value)}
+              helperText="Format: NHI followed by 7 digits"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenForgotPassword(false)}>Cancel</Button>
+            <Button onClick={handleForgotPassword} color="primary">
+              Reset Password
+            </Button>
+          </DialogActions>
+        </Dialog>
       </StyledPaper>
-
-      {/* Forgot Password Dialog */}
-      <Dialog 
-        open={openForgotPassword} 
-        onClose={() => setOpenForgotPassword(false)}
-        PaperProps={{
-          sx: {
-            borderRadius: '15px',
-            padding: '16px'
-          }
-        }}
-      >
-        <DialogTitle>Reset Password</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={resetEmail}
-            onChange={(e) => setResetEmail(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="NHI Number"
-            fullWidth
-            variant="outlined"
-            value={resetNHI}
-            onChange={(e) => setResetNHI(e.target.value)}
-            helperText="Format: NHI followed by 7 digits"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenForgotPassword(false)}>Cancel</Button>
-          <Button 
-            onClick={handleForgotPassword} 
-            disabled={loading}
-            variant="contained"
-            sx={{
-              background: 'linear-gradient(45deg, #2196F3 30%, #4CAF50 90%)',
-              '&:hover': {
-                background: 'linear-gradient(45deg, #1976D2 30%, #388E3C 90%)'
-              }
-            }}
-          >
-            {loading ? <CircularProgress size={24} /> : 'Reset Password'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Error Snackbar */}
-      <Snackbar
-        open={!!error}
-        autoHideDuration={6000}
-        onClose={() => setError('')}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert 
-          onClose={() => setError('')} 
-          severity="error" 
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
-          {error}
-        </Alert>
-      </Snackbar>
-
-      {/* Success Snackbar */}
-      <Snackbar
-        open={!!successMessage}
-        autoHideDuration={6000}
-        onClose={() => setSuccessMessage('')}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert 
-          onClose={() => setSuccessMessage('')} 
-          severity="success" 
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
-          {successMessage}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };

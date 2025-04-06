@@ -4,7 +4,7 @@
     "firstName": "John",
     "lastName": "Doe",
     "email": "john.doe@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password123",
     "NHI": "NHI1234567",
     "DOB": "1990-01-15",
     "address": "123 Queen Street, Auckland, 1010, New Zealand"
@@ -14,7 +14,7 @@
     "firstName": "Jane",
     "lastName": "Smith",
     "email": "jane.smith@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password456",
     "NHI": "NHI2345678",
     "DOB": "1985-03-22",
     "address": "456 Victoria Road, Wellington, 6011, New Zealand"
@@ -24,7 +24,7 @@
     "firstName": "Michael",
     "lastName": "Johnson",
     "email": "michael.johnson@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password789",
     "NHI": "NHI3456789",
     "DOB": "1992-05-30",
     "address": "789 Dominion Street, Hamilton, 3204, New Zealand"
@@ -34,7 +34,7 @@
     "firstName": "Emily",
     "lastName": "Williams",
     "email": "emily.williams@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password101112",
     "NHI": "NHI4567890",
     "DOB": "1994-07-18",
     "address": "101 Jervois Road, Auckland, 1011, New Zealand"
@@ -44,7 +44,7 @@
     "firstName": "David",
     "lastName": "Brown",
     "email": "david.brown@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password131415",
     "NHI": "NHI5678901",
     "DOB": "1988-09-25",
     "address": "202 Church Street, Dunedin, 9016, New Zealand"
@@ -54,7 +54,7 @@
     "firstName": "Sophia",
     "lastName": "Davis",
     "email": "sophia.davis@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password161718",
     "NHI": "NHI6789012",
     "DOB": "1993-11-12",
     "address": "303 High Street, Christchurch, 8011, New Zealand"
@@ -64,7 +64,7 @@
     "firstName": "William",
     "lastName": "Miller",
     "email": "william.miller@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password192021",
     "NHI": "NHI7890123",
     "DOB": "1987-02-10",
     "address": "404 Ferry Road, Christchurch, 8023, New Zealand"
@@ -74,7 +74,7 @@
     "firstName": "Olivia",
     "lastName": "Garcia",
     "email": "olivia.garcia@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password222324",
     "NHI": "NHI8901234",
     "DOB": "1991-04-02",
     "address": "505 St. Asaph Street, Christchurch, 8011, New Zealand"
@@ -84,7 +84,7 @@
     "firstName": "Liam",
     "lastName": "Martinez",
     "email": "liam.martinez@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password252627",
     "NHI": "NHI9012345",
     "DOB": "1989-06-05",
     "address": "606 Heretaunga Street, Hastings, 4122, New Zealand"
@@ -94,7 +94,7 @@
     "firstName": "Ava",
     "lastName": "Hernandez",
     "email": "ava.hernandez@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password282930",
     "NHI": "NHI0123456",
     "DOB": "1995-08-11",
     "address": "707 Ellice Street, Napier, 4110, New Zealand"
@@ -104,7 +104,7 @@
     "firstName": "Isabella",
     "lastName": "Lee",
     "email": "isabella.lee@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password313233",
     "NHI": "NHI1234678",
     "DOB": "1994-09-21",
     "address": "809 Newmarket Street, Auckland, 1023, New Zealand"
@@ -114,7 +114,7 @@
     "firstName": "Ethan",
     "lastName": "Walker",
     "email": "ethan.walker@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password343536",
     "NHI": "NHI2345789",
     "DOB": "1990-12-03",
     "address": "910 Papanui Road, Christchurch, 8053, New Zealand"
@@ -124,7 +124,7 @@
     "firstName": "Mia",
     "lastName": "King",
     "email": "mia.king@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password373839",
     "NHI": "NHI3456890",
     "DOB": "1987-01-14",
     "address": "1010 Princes Street, Dunedin, 9016, New Zealand"
@@ -134,7 +134,7 @@
     "firstName": "James",
     "lastName": "Scott",
     "email": "james.scott@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password404142",
     "NHI": "NHI4567901",
     "DOB": "1988-02-25",
     "address": "1111 Victoria Avenue, Wanganui, 4500, New Zealand"
@@ -144,7 +144,7 @@
     "firstName": "Charlotte",
     "lastName": "Taylor",
     "email": "charlotte.taylor@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password434445",
     "NHI": "NHI5678912",
     "DOB": "1992-03-16",
     "address": "1212 Dominion Road, Auckland, 1025, New Zealand"
@@ -154,7 +154,7 @@
     "firstName": "Benjamin",
     "lastName": "Anderson",
     "email": "benjamin.anderson@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password464748",
     "NHI": "NHI6789023",
     "DOB": "1986-04-28",
     "address": "1313 Riccarton Road, Christchurch, 8041, New Zealand"
@@ -164,7 +164,7 @@
     "firstName": "Amelia",
     "lastName": "Thomas",
     "email": "amelia.thomas@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password495051",
     "NHI": "NHI7890134",
     "DOB": "1993-05-09",
     "address": "1414 Queen Street, Auckland, 1010, New Zealand"
@@ -174,7 +174,7 @@
     "firstName": "Alexander",
     "lastName": "Martin",
     "email": "alexander.martin@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password525354",
     "NHI": "NHI8901245",
     "DOB": "1991-06-17",
     "address": "1515 Cameron Road, Tauranga, 3112, New Zealand"
@@ -184,7 +184,7 @@
     "firstName": "Zoe",
     "lastName": "Rodriguez",
     "email": "zoe.rodriguez@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password555657",
     "NHI": "NHI9012356",
     "DOB": "1994-07-25",
     "address": "1616 Great South Road, Auckland, 1051, New Zealand"
@@ -194,7 +194,7 @@
     "firstName": "Jackson",
     "lastName": "White",
     "email": "jackson.white@example.com",
-    "password": "$2a$10$7qJ8Q1J8Q1J8Q1J8Q1J8QO",
+    "password": "password585960",
     "NHI": "NHI0123467",
     "DOB": "1990-08-03",
     "address": "1717 Te Rapa Road, Hamilton, 3200, New Zealand"
