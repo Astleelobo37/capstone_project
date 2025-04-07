@@ -1,242 +1,282 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
+  Grid,
   Paper,
   Typography,
-  Box,
   Button,
-  Grid,
-  TextField,
   IconButton,
-  Divider,
+  Box,
+  List,
+  ListItem,
+  CardMedia,
   Alert,
-  CircularProgress
+  Snackbar
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../context/UserContext';
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(3),
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-  borderRadius: '15px',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
-}));
+import { Delete as DeleteIcon, Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import { useMask } from '../contexts/MaskContext';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { currentUser } = useUserContext();
-  const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const { cart, updateCart, masks, updateMaskStock } = useMask();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  useEffect(() => {
-    // Load cart from localStorage
-    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCart(savedCart);
-  }, []);
+  const handleQuantityChange = async (maskId, newQuantity) => {
+    try {
+      const mask = masks.find(m => m.id === maskId);
+      if (!mask) return;
 
-  const handleUpdateQuantity = (maskId, quantity) => {
-    if (quantity < 1) {
-      handleRemoveFromCart(maskId);
-      return;
+      if (newQuantity < 1) {
+        handleDeleteItem(maskId);
+        return;
+      }
+
+      if (newQuantity > mask.stock) {
+        setSnackbarMessage('Not enough stock available');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
+        return;
+      }
+
+      const updatedCart = cart.map(item => 
+        item.id === maskId ? { ...item, quantity: newQuantity } : item
+      );
+
+      updateCart(updatedCart);
+      setSnackbarMessage('Cart updated successfully');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      setSnackbarMessage('Error updating quantity');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
-    const updatedCart = cart.map(item =>
-      item.id === maskId ? { ...item, quantity } : item
-    );
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  const handleRemoveFromCart = (maskId) => {
-    const updatedCart = cart.filter(item => item.id !== maskId);
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const handleDeleteItem = async (maskId) => {
+    try {
+      const mask = masks.find(m => m.id === maskId);
+      if (!mask) return;
+
+      const updatedCart = cart.filter(item => item.id !== maskId);
+      updateCart(updatedCart);
+
+      // Update stock in the backend
+      await updateMaskStock(maskId, mask.stock + 1);
+
+      setSnackbarMessage('Item removed from cart');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error('Error removing item:', error);
+      setSnackbarMessage('Error removing item');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
+  };
+
+  const calculateSubtotal = () => {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+  };
+
+  const calculateTax = () => {
+    return (parseFloat(calculateSubtotal()) * 0.1).toFixed(2);
   };
 
   const calculateTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return (parseFloat(calculateSubtotal()) + parseFloat(calculateTax())).toFixed(2);
   };
 
   const handleCheckout = async () => {
-    if (!currentUser) {
-      setError('Please log in to checkout');
-      return;
-    }
-
-    setLoading(true);
     try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `token ${currentUser.token}`
-        },
-        body: JSON.stringify({
-          userId: currentUser.id,
-          items: cart,
-          total: calculateTotal()
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to place order');
+      // Update stock for all items in cart
+      for (const item of cart) {
+        const mask = masks.find(m => m.id === item.id);
+        if (mask) {
+          await updateMaskStock(item.id, mask.stock - item.quantity);
+        }
       }
 
-      setCart([]);
-      localStorage.removeItem('cart');
-      setSuccess('Order placed successfully!');
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
-    } catch (err) {
-      setError('Failed to place order: ' + err.message);
-    } finally {
-      setLoading(false);
+      // Clear the cart
+      updateCart([]);
+
+      setSnackbarMessage('Order placed successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error during checkout:', error);
+      setSnackbarMessage('Error during checkout');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
   };
 
-  if (cart.length === 0) {
-    return (
-      <Container>
-        <StyledPaper>
-          <Box sx={{ textAlign: 'center', py: 4 }}>
-            <Typography variant="h5" gutterBottom>
-              Your cart is empty
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<ArrowBackIcon />}
-              onClick={() => navigate('/dashboard')}
-              sx={{ mt: 2 }}
-            >
-              Continue Shopping
-            </Button>
-          </Box>
-        </StyledPaper>
-      </Container>
-    );
-  }
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
-    <Container>
-      <StyledPaper>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1">
-            Shopping Cart
-          </Typography>
-          <Button
-            variant="outlined"
-            startIcon={<ArrowBackIcon />}
-            onClick={() => navigate('/dashboard')}
-          >
-            Continue Shopping
-          </Button>
-        </Box>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-
-        {success && (
-          <Alert severity="success" sx={{ mb: 2 }}>
-            {success}
-          </Alert>
-        )}
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            {cart.map((item) => (
-              <Box key={item.id} sx={{ mb: 3 }}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12} sm={3}>
-                    <Box
-                      component="img"
-                      src={item.imageUrl}
-                      alt={item.maskType || item.mask_type}
-                      sx={{
-                        width: '100%',
-                        height: 'auto',
-                        borderRadius: 1
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="h6">
-                      {item.maskType || item.mask_type}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.description}
-                    </Typography>
-                    <Box sx={{ mt: 1 }}>
-                      <TextField
-                        type="number"
-                        size="small"
-                        value={item.quantity}
-                        onChange={(e) => handleUpdateQuantity(item.id, parseInt(e.target.value))}
-                        inputProps={{ min: 1 }}
-                        sx={{ width: 80, mr: 2 }}
-                      />
-                      <IconButton
-                        color="error"
-                        onClick={() => handleRemoveFromCart(item.id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <Typography variant="h6" color="primary" align="right">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Divider sx={{ my: 2 }} />
-              </Box>
-            ))}
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Order Summary
+    <Box sx={{ 
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <Container maxWidth="xl" sx={{ 
+        mt: 4, 
+        mb: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}>
+        <Grid container spacing={3} sx={{ width: '100%' }}>
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3, width: '100%' }}>
+              <Typography variant="h4" gutterBottom align="center">
+                Your Shopping Cart
               </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Typography>Subtotal</Typography>
-                <Typography>${calculateTotal().toFixed(2)}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Typography>Shipping</Typography>
-                <Typography>Free</Typography>
-              </Box>
-              <Divider sx={{ my: 2 }} />
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                <Typography variant="h6">Total</Typography>
-                <Typography variant="h6" color="primary">
-                  ${calculateTotal().toFixed(2)}
+              {cart.length === 0 ? (
+                <Typography variant="body1" color="text.secondary" align="center">
+                  Your cart is empty
                 </Typography>
-              </Box>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={handleCheckout}
-                disabled={loading}
-              >
-                {loading ? <CircularProgress size={24} /> : 'Checkout'}
-              </Button>
+              ) : (
+                <Typography variant="body1" color="text.secondary" align="center">
+                  {cart.length} items in your cart
+                </Typography>
+              )}
             </Paper>
           </Grid>
+
+          <Grid item xs={12} md={8}>
+            {cart.length === 0 ? (
+              <Paper sx={{ p: 3, textAlign: 'center' }}>
+                <Typography variant="h6" gutterBottom>
+                  Your cart is empty
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  Continue Shopping
+                </Button>
+              </Paper>
+            ) : (
+              <Paper sx={{ p: 3 }}>
+                <List>
+                  {cart.map((item) => (
+                    <ListItem
+                      key={item.id}
+                      sx={{
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        py: 2,
+                      }}
+                    >
+                      <Grid container spacing={2} alignItems="center">
+                        <Grid item xs={12} sm={3}>
+                          <CardMedia
+                            component="img"
+                            height="100"
+                            image={item.image}
+                            alt={item.name}
+                            sx={{ objectFit: 'contain' }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant="h6" align="center">{item.name}</Typography>
+                          <Typography variant="body2" color="text.secondary" align="center">
+                            {item.description}
+                          </Typography>
+                          <Typography variant="h6" color="primary" align="center">
+                            ${item.price}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center' }}>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                              disabled={item.quantity <= 1}
+                            >
+                              <RemoveIcon />
+                            </IconButton>
+                            <Typography>{item.quantity}</Typography>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                              disabled={item.quantity >= item.stock}
+                            >
+                              <AddIcon />
+                            </IconButton>
+                            <IconButton
+                              color="error"
+                              onClick={() => handleDeleteItem(item.id)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            )}
+          </Grid>
+
+          {cart.length > 0 && (
+            <Grid item xs={12} md={4}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom align="center">
+                  Order Summary
+                </Typography>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body1" align="center">
+                    Subtotal: ${calculateSubtotal()}
+                  </Typography>
+                  <Typography variant="body1" align="center">
+                    Tax: ${calculateTax()}
+                  </Typography>
+                  <Typography variant="h6" sx={{ mt: 1 }} align="center">
+                    Total: ${calculateTotal()}
+                  </Typography>
+                </Box>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCheckout}
+                  disabled={cart.length === 0}
+                >
+                  Proceed to Checkout
+                </Button>
+              </Paper>
+            </Grid>
+          )}
         </Grid>
-      </StyledPaper>
-    </Container>
+
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </Box>
   );
 };
 

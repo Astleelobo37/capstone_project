@@ -33,9 +33,11 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import { useMasks } from '../contexts/MaskContext';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -57,7 +59,8 @@ const severityColors = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [masks, setMasks] = useState([]);
+  const { user } = useAuth();
+  const { masks, loading: masksLoading, error: masksError, fetchMasks, updateMaskStock, cart, updateCart } = useMasks();
   const [testResults, setTestResults] = useState(null);
   const [openUpload, setOpenUpload] = useState(false);
   const [uploadFile, setUploadFile] = useState(null);
@@ -65,14 +68,31 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [filterSeverity, setFilterSeverity] = useState('all');
-  const [cart, setCart] = useState([]);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '' });
-  const { user } = useAuth();
+  const [filter, setFilter] = useState('all');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   useEffect(() => {
-    console.log('Dashboard useEffect triggered');
-    
+    const loadData = async () => {
+      try {
+        await fetchMasks();
+        await fetchTestResults();
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
+          updateCart(JSON.parse(savedCart));
+        }
+      } catch (err) {
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [fetchMasks, updateCart]);
+
+  const fetchTestResults = async () => {
     if (!user) {
       console.log('No user data found, redirecting to login');
       navigate('/login');
@@ -85,61 +105,10 @@ const Dashboard = () => {
       navigate('/login');
       return;
     }
-    
-    console.log('Starting to fetch masks...');
-    fetchMasks();
-    console.log('Starting to fetch test results...');
-    fetchTestResults(user.id);
-  }, [user]);
-
-  const fetchMasks = async () => {
-    try {
-      console.log('Making API call to /api/masks');
-      const response = await axios.get('http://localhost:4000/api/masks');
-      console.log('Masks API response status:', response.status);
-      
-      const data = response.data;
-      console.log('Received masks data:', JSON.stringify(data, null, 2));
-      
-      if (!Array.isArray(data)) {
-        console.error('Invalid data format:', typeof data);
-        throw new Error('Expected array of masks but got: ' + typeof data);
-      }
-      
-      if (data.length === 0) {
-        console.log('No masks found in response');
-        setError('No masks available at this time');
-        return;
-      }
-      
-      // Filter for non-ResMed masks (IDs 1-10)
-      const filteredMasks = data.filter(mask => mask.id <= 10);
-      setMasks(filteredMasks);
-      setLoading(false);
-      console.log('Successfully set masks state:', data.length, 'masks');
-    } catch (err) {
-      console.error('Error in fetchMasks:', err);
-      setError('Failed to fetch masks: ' + (err.response?.data?.message || err.message));
-      setLoading(false);
-    }
-  };
-
-  const fetchTestResults = async (userId) => {
-    if (!userId) {
-      console.log('No user ID provided for test results');
-      return;
-    }
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('No authentication token found');
-      navigate('/login');
-      return;
-    }
 
     try {
-      console.log('Making API call to /api/test-results/' + userId + '/latest');
-      const response = await axios.get(`http://localhost:4000/api/test-results/${userId}/latest`, {
+      console.log('Making API call to /api/test-results/' + user.id + '/latest');
+      const response = await axios.get(`http://localhost:4000/api/test-results/${user.id}/latest`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
@@ -161,26 +130,74 @@ const Dashboard = () => {
     }
   };
 
-  const handleAddToCart = (mask) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === mask.id);
-      if (existingItem) {
-        return prevCart.map(item =>
-          item.id === mask.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+  const handleAddToCart = async (mask) => {
+    try {
+      if (mask.stock <= 0) {
+        setSnackbarMessage('This item is out of stock');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
+        return;
       }
-      return [...prevCart, { ...mask, quantity: 1 }];
-    });
-    setSnackbar({
-      open: true,
-      message: `${mask.maskType || mask.mask_type} added to cart!`
-    });
+
+      // Check if item already exists in cart
+      const existingItem = cart.find(item => item.id === mask.id);
+      if (existingItem) {
+        if (existingItem.quantity >= mask.stock) {
+          setSnackbarMessage('Not enough stock available');
+          setSnackbarSeverity('error');
+          setOpenSnackbar(true);
+          return;
+        }
+        const updatedCart = cart.map(item =>
+          item.id === mask.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+        updateCart(updatedCart);
+      } else {
+        updateCart([...cart, { ...mask, quantity: 1 }]);
+      }
+
+      // Update stock in the backend
+      await updateMaskStock(mask.id, mask.stock - 1);
+
+      setSnackbarMessage('Item added to cart');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      setSnackbarMessage('Error adding to cart');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
   };
 
-  const handleRemoveFromCart = (maskId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== maskId));
+  const handleRemoveFromCart = async (maskId) => {
+    const itemToRemove = cart.find(item => item.id === maskId);
+    if (!itemToRemove) return;
+
+    const updatedCart = cart.filter(item => item.id !== maskId);
+    
+    try {
+      // Update stock on backend
+      await axios.put(`http://localhost:4000/api/masks/${maskId}/stock`, {
+        stock: itemToRemove.stock + itemToRemove.quantity
+      }, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      // Update local state
+      updateCart(updatedCart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      setSnackbarMessage('Item removed from cart');
+      setSnackbarSeverity('info');
+      setOpenSnackbar(true);
+    } catch (err) {
+      console.error('Error updating stock:', err);
+      setSnackbarMessage('Failed to update stock');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
   };
 
   const handleUpdateQuantity = (maskId, quantity) => {
@@ -188,7 +205,7 @@ const Dashboard = () => {
       handleRemoveFromCart(maskId);
       return;
     }
-    setCart(prevCart =>
+    updateCart(prevCart =>
       prevCart.map(item =>
         item.id === maskId ? { ...item, quantity } : item
       )
@@ -215,13 +232,15 @@ const Dashboard = () => {
         throw new Error('Failed to place order');
       }
 
-      setCart([]);
-      setSnackbar({
-        open: true,
-        message: 'Order placed successfully!'
-      });
+      updateCart([]);
+      setSnackbarMessage('Order placed successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
     } catch (err) {
       setError('Failed to place order: ' + err.message);
+      setSnackbarMessage('Failed to place order');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
   };
 
@@ -243,9 +262,12 @@ const Dashboard = () => {
       if (!response.ok) throw new Error('Upload failed');
 
       setOpenUpload(false);
-      fetchTestResults(user.id);
+      fetchTestResults();
     } catch (err) {
       setError('Failed to upload test results');
+      setSnackbarMessage('Failed to upload test results');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     } finally {
       setLoading(false);
     }
@@ -258,11 +280,18 @@ const Dashboard = () => {
   };
 
   const filterMasksBySeverity = (masks) => {
-    if (filterSeverity === 'all') return masks;
+    if (filter === 'all') return masks;
     return masks.filter(mask => {
       const maskSeverity = mask.description.match(/GOLD [1-4]/g);
-      return maskSeverity && maskSeverity.some(s => s.includes(filterSeverity));
+      return maskSeverity && maskSeverity.some(s => s.includes(filter));
     });
+  };
+
+  // Filter for non-ResMed masks (IDs 1-10)
+  const filteredMasks = masks.filter(mask => mask.id <= 10);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   if (loading) {
@@ -283,80 +312,13 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ background: 'linear-gradient(45deg, #2196F3 30%, #4CAF50 90%)' }}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Healthcare Portal
-          </Typography>
-          {testResults && (
-            <Chip
-              label={testResults.status}
-              sx={{
-                bgcolor: severityColors[testResults.status],
-                color: 'white',
-                mr: 2
-              }}
-            />
-          )}
-          <Button
-            color="inherit"
-            startIcon={<UploadFileIcon />}
-            onClick={() => setOpenUpload(true)}
-            sx={{ mr: 2 }}
-          >
-            Upload Results
-          </Button>
-          <Badge badgeContent={cart.length} color="error">
-            <Button
-              color="inherit"
-              startIcon={<ShoppingCartIcon />}
-              onClick={() => navigate('/cart')}
-              sx={{ mr: 2 }}
-            >
-              View Cart
-            </Button>
-          </Badge>
-          <IconButton
-            color="inherit"
-            onClick={(e) => setAnchorEl(e.currentTarget)}
-          >
-            <AccountCircleIcon />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
-          >
-            <MenuItem disabled>
-              <Typography variant="body2">
-                {user?.name}
-              </Typography>
-            </MenuItem>
-            <MenuItem onClick={() => navigate('/cart')}>
-              <Badge badgeContent={cart.length} color="error">
-                <ShoppingCartIcon sx={{ mr: 1 }} />
-              </Badge>
-              Cart
-            </MenuItem>
-            <MenuItem onClick={() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              navigate('/login');
-            }}>
-              <LogoutIcon sx={{ mr: 1 }} />
-              Logout
-            </MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-
       <Container sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel>Filter by Severity</InputLabel>
             <Select
-              value={filterSeverity}
-              onChange={(e) => setFilterSeverity(e.target.value)}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
               label="Filter by Severity"
             >
               <MenuItem value="all">All Masks</MenuItem>
@@ -368,49 +330,71 @@ const Dashboard = () => {
           </FormControl>
         </Box>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filterMasksBySeverity(masks).map((mask) => (
-            <div 
-              key={mask.id} 
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-[500px] flex flex-col"
-            >
-              <div className="h-64 overflow-hidden">
-                <img 
-                  src={mask.imageUrl} 
+        <Grid container spacing={3}>
+          {filteredMasks.map((mask) => (
+            <Grid item xs={12} sm={6} md={4} key={mask.id}>
+              <StyledCard>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={mask.imageUrl}
                   alt={mask.maskType}
-                  className="w-full h-full object-cover"
                 />
-              </div>
-              <div className="p-6 flex flex-col flex-grow">
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">{mask.maskType}</h2>
-                <p className="text-gray-600 mb-4 flex-grow">{mask.description}</p>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-lg font-bold text-blue-600">${mask.price.toFixed(2)}</span>
-                  <span className={`px-3 py-1 rounded-full text-sm ${
-                    mask.stock > 50 ? 'bg-green-100 text-green-800' : 
-                    mask.stock > 20 ? 'bg-yellow-100 text-yellow-800' : 
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {mask.stock > 50 ? 'In Stock' : mask.stock > 20 ? 'Low Stock' : 'Limited Stock'}
-                  </span>
-                </div>
-                <button
-                  onClick={() => handleAddToCart(mask)}
-                  className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {mask.maskType}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    {mask.description}
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Chip
+                      label={`Stock: ${mask.stock}`}
+                      color={mask.stock > 10 ? 'success' : 'error'}
+                    />
+                    <Typography variant="h6" color="primary">
+                      ${mask.price}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      startIcon={<AddShoppingCartIcon />}
+                      onClick={() => handleAddToCart(mask)}
+                    >
+                      Add to Cart
+                    </Button>
+                    {cart.some(item => item.id === mask.id) && (
+                      <IconButton
+                        color="error"
+                        onClick={() => handleRemoveFromCart(mask.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Box>
+                </CardContent>
+              </StyledCard>
+            </Grid>
           ))}
-        </div>
+        </Grid>
 
         <Snackbar
-          open={snackbar.open}
-          autoHideDuration={3000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          message={snackbar.message}
-        />
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Container>
 
       {/* Upload Results Dialog */}
