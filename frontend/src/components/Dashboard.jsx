@@ -34,7 +34,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../context/UserContext';
+import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -61,18 +62,18 @@ const Dashboard = () => {
   const [openUpload, setOpenUpload] = useState(false);
   const [uploadFile, setUploadFile] = useState(null);
   const [severity, setSeverity] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterSeverity, setFilterSeverity] = useState('all');
   const [cart, setCart] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
-  const { currentUser } = useUserContext();
+  const { user } = useAuth();
 
   useEffect(() => {
     console.log('Dashboard useEffect triggered');
     
-    if (!currentUser) {
+    if (!user) {
       console.log('No user data found, redirecting to login');
       navigate('/login');
       return;
@@ -88,22 +89,16 @@ const Dashboard = () => {
     console.log('Starting to fetch masks...');
     fetchMasks();
     console.log('Starting to fetch test results...');
-    fetchTestResults(currentUser.id);
-  }, [currentUser]);
+    fetchTestResults(user.id);
+  }, [user]);
 
   const fetchMasks = async () => {
     try {
       console.log('Making API call to /api/masks');
-      const response = await fetch('/api/masks');
+      const response = await axios.get('http://localhost:4000/api/masks');
       console.log('Masks API response status:', response.status);
       
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
+      const data = response.data;
       console.log('Received masks data:', JSON.stringify(data, null, 2));
       
       if (!Array.isArray(data)) {
@@ -117,11 +112,15 @@ const Dashboard = () => {
         return;
       }
       
-      setMasks(data);
+      // Filter for non-ResMed masks (IDs 1-10)
+      const filteredMasks = data.filter(mask => mask.id <= 10);
+      setMasks(filteredMasks);
+      setLoading(false);
       console.log('Successfully set masks state:', data.length, 'masks');
     } catch (err) {
       console.error('Error in fetchMasks:', err);
-      setError('Failed to fetch masks: ' + err.message);
+      setError('Failed to fetch masks: ' + (err.response?.data?.message || err.message));
+      setLoading(false);
     }
   };
 
@@ -140,7 +139,7 @@ const Dashboard = () => {
 
     try {
       console.log('Making API call to /api/test-results/' + userId + '/latest');
-      const response = await fetch(`/api/test-results/${userId}/latest`, {
+      const response = await axios.get(`http://localhost:4000/api/test-results/${userId}/latest`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
@@ -153,17 +152,12 @@ const Dashboard = () => {
         return;
       }
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log('Received test results data:', data);
-      setTestResults(data);
-      setSeverity(data.status);
+      console.log('Received test results data:', response.data);
+      setTestResults(response.data);
+      setSeverity(response.data.status);
     } catch (err) {
       console.error('Error in fetchTestResults:', err);
-      setError('Failed to fetch test results: ' + err.message);
+      setError('Failed to fetch test results: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -207,17 +201,14 @@ const Dashboard = () => {
 
   const handleCheckout = async () => {
     try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
+      const response = await axios.post('/api/orders', {
+        userId: user.id,
+        items: cart,
+        total: calculateTotal()
+      }, {
         headers: {
-          'Content-Type': 'application/json',
-          'authorization': `token ${currentUser.token}`
+          'authorization': `token ${user.token}`
         },
-        body: JSON.stringify({
-          userId: currentUser.id,
-          items: cart,
-          total: calculateTotal()
-        })
       });
 
       if (!response.ok) {
@@ -239,22 +230,20 @@ const Dashboard = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append('file', uploadFile);
-    formData.append('userId', currentUser.id);
+    formData.append('userId', user.id);
     formData.append('severity', severity);
 
     try {
-      const response = await fetch('/api/test-results/upload', {
-        method: 'POST',
+      const response = await axios.post('/api/test-results/upload', formData, {
         headers: {
-          'authorization': `token ${currentUser.token}`
+          'authorization': `token ${user.token}`
         },
-        body: formData
       });
 
       if (!response.ok) throw new Error('Upload failed');
 
       setOpenUpload(false);
-      fetchTestResults(currentUser.id);
+      fetchTestResults(user.id);
     } catch (err) {
       setError('Failed to upload test results');
     } finally {
@@ -275,6 +264,22 @@ const Dashboard = () => {
       return maskSeverity && maskSeverity.some(s => s.includes(filterSeverity));
     });
   };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box p={3}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -324,7 +329,7 @@ const Dashboard = () => {
           >
             <MenuItem disabled>
               <Typography variant="body2">
-                {currentUser?.name}
+                {user?.name}
               </Typography>
             </MenuItem>
             <MenuItem onClick={() => navigate('/cart')}>

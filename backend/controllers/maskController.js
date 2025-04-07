@@ -24,7 +24,7 @@ const masks = [
   },
   {
     id: 3,
-    maskType: "Fisher & Paykel 1",
+    maskType: "Fisher & Paykel Full Face Mask",
     stock: 75,
     serialNumber: "FP-001",
     orderDate: "2024-04-05",
@@ -34,7 +34,7 @@ const masks = [
   },
   {
     id: 4,
-    maskType: "Fisher & Paykel 2",
+    maskType: "Fisher & Paykel Nasal Mask",
     stock: 60,
     serialNumber: "FP-002",
     orderDate: "2024-04-05",
@@ -44,7 +44,7 @@ const masks = [
   },
   {
     id: 5,
-    maskType: "Fisher & Paykel 3",
+    maskType: "Fisher & Paykel Full Face Mask Humidifier",
     stock: 45,
     serialNumber: "FP-003",
     orderDate: "2024-04-05",
@@ -54,7 +54,7 @@ const masks = [
   },
   {
     id: 6,
-    maskType: "Fisher & Paykel 4",
+    maskType: "Fisher & Paykel Nasal Pillow Mask",
     stock: 30,
     serialNumber: "FP-004",
     orderDate: "2024-04-05",
@@ -64,7 +64,7 @@ const masks = [
   },
   {
     id: 7,
-    maskType: "Fisher & Paykel 5",
+    maskType: "Fisher & Paykel Full Face Mask Cushion",
     stock: 25,
     serialNumber: "FP-005",
     orderDate: "2024-04-05",
@@ -74,7 +74,7 @@ const masks = [
   },
   {
     id: 8,
-    maskType: "Fisher & Paykel 6",
+    maskType: "Fisher & Paykel Nasal Mask with Valve",
     stock: 20,
     serialNumber: "FP-006",
     orderDate: "2024-04-05",
@@ -84,7 +84,7 @@ const masks = [
   },
   {
     id: 9,
-    maskType: "Fisher & Paykel 7",
+    maskType: "Integrated Fisher & Paykel Full Face Mask",
     stock: 15,
     serialNumber: "FP-007",
     orderDate: "2024-04-05",
@@ -94,7 +94,7 @@ const masks = [
   },
   {
     id: 10,
-    maskType: "Fisher & Paykel 8",
+    maskType: "Fisher & Paykel Nasal Pillow Mask Silicone",
     stock: 10,
     serialNumber: "FP-008",
     orderDate: "2024-04-05",
