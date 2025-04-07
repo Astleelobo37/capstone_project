@@ -7,7 +7,7 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 1 - Mild: N95 Respirator Mask with high filtration efficiency",
     "price": 29.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108152-af12781d33d4?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 2,
@@ -17,7 +17,7 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 2 - Moderate: KN95 Protective Mask with comfortable ear loops",
     "price": 24.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 3,
@@ -27,7 +27,7 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 3 - Severe: FFP2 Medical Grade Mask with enhanced protection",
     "price": 34.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108136-38380a7ae388?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 4 - Very Severe: FFP3 Maximum Protection Mask for critical conditions",
     "price": 39.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108144-47d1694e5c84?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 5,
@@ -47,7 +47,7 @@
     "orderDate": "2023-12-15T08:30:00.000Z",
     "description": "Full face CPAP mask with RollFit seal technology for treating severe COPD. Suitable for GOLD 3-4 stage patients requiring high-pressure support.",
     "price": 189.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108152-af12781d33d4?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 6,
@@ -57,7 +57,7 @@
     "orderDate": "2024-01-10T10:15:00.000Z",
     "description": "Compact nasal mask with CapFit headgear. Ideal for mild to moderate COPD (GOLD 1-2) patients who require overnight oxygen support.",
     "price": 129.95,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 7,
@@ -67,7 +67,7 @@
     "orderDate": "2024-02-05T14:45:00.000Z",
     "description": "Full face mask with stability bar for high-pressure NIV therapy. Recommended for severe COPD exacerbations and GOLD 3-4 patients.",
     "price": 199.5,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108136-38380a7ae388?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 8,
@@ -77,7 +77,7 @@
     "orderDate": "2024-01-22T09:30:00.000Z",
     "description": "Minimally invasive nasal pillows with AirPillow seal. Best for GOLD 1-2 COPD patients who experience claustrophobia with larger masks.",
     "price": 119.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108144-47d1694e5c84?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 9,
@@ -87,7 +87,7 @@
     "orderDate": "2024-03-01T11:20:00.000Z",
     "description": "Compact full face mask with dynamic support. Designed for COPD patients requiring 24-hour ventilation support with minimal pressure points.",
     "price": 209.95,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108152-af12781d33d4?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 10,
@@ -97,7 +97,7 @@
     "orderDate": "2023-11-28T13:10:00.000Z",
     "description": "Nasal mask with RollFit seal and easy-fit headgear. Appropriate for moderate COPD patients (GOLD 2-3) requiring nighttime ventilation.",
     "price": 139.5,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop"
+    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
   {
     "id": 11,

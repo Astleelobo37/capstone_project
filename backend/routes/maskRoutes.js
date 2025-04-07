@@ -1,18 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const maskController = require('../controllers/maskController');
-const authController = require('../controllers/authController');
 
 // Public routes
-router.get('/', maskController.getAllMasks);
-router.get('/:id', maskController.getMaskById);
-router.get('/severity/:severity', maskController.getMasksBySeverity);
-router.get('/price-range', maskController.getMasksByPriceRange);
+router.get('/', (req, res, next) => {
+  console.log('GET /api/masks route hit');
+  maskController.getAllMasks(req, res).catch(next);
+});
 
-// Protected routes (require authentication)
-router.put('/:id/stock', authController.verifyToken, maskController.updateMaskStock);
-router.post('/', authController.verifyToken, maskController.createMask);
-router.put('/:id', authController.verifyToken, maskController.updateMask);
-router.delete('/:id', authController.verifyToken, maskController.deleteMask);
+router.get('/:id', (req, res, next) => {
+  console.log('GET /api/masks/:id route hit', req.params.id);
+  maskController.getMaskById(req, res).catch(next);
+});
+
+router.get('/severity/:severity', (req, res, next) => {
+  console.log('GET /api/masks/severity/:severity route hit', req.params.severity);
+  maskController.getMasksBySeverity(req, res).catch(next);
+});
+
+router.get('/price-range', (req, res, next) => {
+  console.log('GET /api/masks/price-range route hit', req.query);
+  maskController.getMasksByPriceRange(req, res).catch(next);
+});
 
 module.exports = router; 

@@ -22,12 +22,17 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Select
+  Select,
+  Badge,
+  Snackbar,
+  CircularProgress
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext';
 
@@ -35,10 +40,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  transition: 'transform 0.2s ease-in-out',
+  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
   '&:hover': {
     transform: 'scale(1.02)',
-    boxShadow: theme.shadows[6]
+    boxShadow: theme.shadows[8]
   }
 }));
 
@@ -60,39 +65,60 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterSeverity, setFilterSeverity] = useState('all');
-  const {currentUser} = useUserContext()
+  const [cart, setCart] = useState([]);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '' });
+  const { currentUser } = useUserContext();
 
   useEffect(() => {
     console.log('Dashboard useEffect triggered');
-    
     
     if (!currentUser) {
       console.log('No user data found, redirecting to login');
       navigate('/login');
       return;
     }
-    
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('No token found, redirecting to login');
+      navigate('/login');
+      return;
+    }
     
     console.log('Starting to fetch masks...');
     fetchMasks();
     console.log('Starting to fetch test results...');
     fetchTestResults(currentUser.id);
-  }, []);
+  }, [currentUser]);
 
   const fetchMasks = async () => {
     try {
       console.log('Making API call to /api/masks');
       const response = await fetch('/api/masks');
       console.log('Masks API response status:', response.status);
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
       const data = await response.json();
-      console.log('Received masks data:', data);
+      console.log('Received masks data:', JSON.stringify(data, null, 2));
+      
       if (!Array.isArray(data)) {
-        throw new Error('Expected array of masks but got:', typeof data);
+        console.error('Invalid data format:', typeof data);
+        throw new Error('Expected array of masks but got: ' + typeof data);
       }
+      
+      if (data.length === 0) {
+        console.log('No masks found in response');
+        setError('No masks available at this time');
+        return;
+      }
+      
       setMasks(data);
+      console.log('Successfully set masks state:', data.length, 'masks');
     } catch (err) {
       console.error('Error in fetchMasks:', err);
       setError('Failed to fetch masks: ' + err.message);
@@ -104,17 +130,33 @@ const Dashboard = () => {
       console.log('No user ID provided for test results');
       return;
     }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('No authentication token found');
+      navigate('/login');
+      return;
+    }
+
     try {
       console.log('Making API call to /api/test-results/' + userId + '/latest');
-      const response = await fetch(`/api/test-results/${userId}/latest`,{
+      const response = await fetch(`/api/test-results/${userId}/latest`, {
         headers: {
-          "authorization":`token ${currentUser.token}`,
+          "Authorization": `Bearer ${token}`,
         },
       });
+      
       console.log('Test results API response status:', response.status);
+      if (response.status === 401) {
+        console.log('Unauthorized access, redirecting to login');
+        navigate('/login');
+        return;
+      }
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
       const data = await response.json();
       console.log('Received test results data:', data);
       setTestResults(data);
@@ -125,24 +167,94 @@ const Dashboard = () => {
     }
   };
 
+  const handleAddToCart = (mask) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.id === mask.id);
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.id === mask.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevCart, { ...mask, quantity: 1 }];
+    });
+    setSnackbar({
+      open: true,
+      message: `${mask.maskType || mask.mask_type} added to cart!`
+    });
+  };
+
+  const handleRemoveFromCart = (maskId) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== maskId));
+  };
+
+  const handleUpdateQuantity = (maskId, quantity) => {
+    if (quantity < 1) {
+      handleRemoveFromCart(maskId);
+      return;
+    }
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === maskId ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `token ${currentUser.token}`
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          items: cart,
+          total: calculateTotal()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to place order');
+      }
+
+      setCart([]);
+      setSnackbar({
+        open: true,
+        message: 'Order placed successfully!'
+      });
+    } catch (err) {
+      setError('Failed to place order: ' + err.message);
+    }
+  };
+
   const handleUpload = async (e) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
     formData.append('file', uploadFile);
-    formData.append('userId', user.id);
+    formData.append('userId', currentUser.id);
     formData.append('severity', severity);
 
     try {
       const response = await fetch('/api/test-results/upload', {
         method: 'POST',
+        headers: {
+          'authorization': `token ${currentUser.token}`
+        },
         body: formData
       });
 
       if (!response.ok) throw new Error('Upload failed');
 
       setOpenUpload(false);
-      fetchTestResults(user.id);
+      fetchTestResults(currentUser.id);
     } catch (err) {
       setError('Failed to upload test results');
     } finally {
@@ -189,6 +301,16 @@ const Dashboard = () => {
           >
             Upload Results
           </Button>
+          <Badge badgeContent={cart.length} color="error">
+            <Button
+              color="inherit"
+              startIcon={<ShoppingCartIcon />}
+              onClick={() => navigate('/cart')}
+              sx={{ mr: 2 }}
+            >
+              View Cart
+            </Button>
+          </Badge>
           <IconButton
             color="inherit"
             onClick={(e) => setAnchorEl(e.currentTarget)}
@@ -205,7 +327,17 @@ const Dashboard = () => {
                 {currentUser?.name}
               </Typography>
             </MenuItem>
-            <MenuItem onClick={handleLogout}>
+            <MenuItem onClick={() => navigate('/cart')}>
+              <Badge badgeContent={cart.length} color="error">
+                <ShoppingCartIcon sx={{ mr: 1 }} />
+              </Badge>
+              Cart
+            </MenuItem>
+            <MenuItem onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              navigate('/login');
+            }}>
               <LogoutIcon sx={{ mr: 1 }} />
               Logout
             </MenuItem>
@@ -214,7 +346,7 @@ const Dashboard = () => {
       </AppBar>
 
       <Container sx={{ mt: 4, mb: 4 }}>
-        <Box sx={{ mb: 3 }}>
+        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel>Filter by Severity</InputLabel>
             <Select
@@ -231,45 +363,49 @@ const Dashboard = () => {
           </FormControl>
         </Box>
 
-        <Grid container spacing={3}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filterMasksBySeverity(masks).map((mask) => (
-            <Grid item xs={12} sm={6} md={4} key={mask.id}>
-              <StyledCard>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={mask.imageUrl || 'https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop'}
-                  alt={mask.maskType || mask.mask_type}
-                  sx={{
-                    objectFit: 'cover',
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)'
-                    }
-                  }}
+            <div 
+              key={mask.id} 
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-[500px] flex flex-col"
+            >
+              <div className="h-64 overflow-hidden">
+                <img 
+                  src={mask.imageUrl} 
+                  alt={mask.maskType}
+                  className="w-full h-full object-cover"
                 />
-                <CardContent>
-                  <Typography variant="h6" component="div" gutterBottom>
-                    {mask.maskType || mask.mask_type}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    {mask.description}
-                  </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                    <Chip
-                      label={`Stock: ${mask.stock}`}
-                      color={mask.stock > 10 ? 'success' : 'error'}
-                      size="small"
-                    />
-                    <Typography variant="h6" color="primary">
-                      ${mask.price}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </StyledCard>
-            </Grid>
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">{mask.maskType}</h2>
+                <p className="text-gray-600 mb-4 flex-grow">{mask.description}</p>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-lg font-bold text-blue-600">${mask.price.toFixed(2)}</span>
+                  <span className={`px-3 py-1 rounded-full text-sm ${
+                    mask.stock > 50 ? 'bg-green-100 text-green-800' : 
+                    mask.stock > 20 ? 'bg-yellow-100 text-yellow-800' : 
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {mask.stock > 50 ? 'In Stock' : mask.stock > 20 ? 'Low Stock' : 'Limited Stock'}
+                  </span>
+                </div>
+                <button
+                  onClick={() => handleAddToCart(mask)}
+                  className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
           ))}
-        </Grid>
+        </div>
+
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          message={snackbar.message}
+        />
       </Container>
 
       {/* Upload Results Dialog */}

@@ -12,39 +12,44 @@ exports.login = async (req, res) => {
     console.log('Login request received:', req.body);
     const { email, NHI, password } = req.body;
 
-    if (!email && !(NHI || password)) {
-      console.log('No email or NHI provided');
-      return res.status(400).json({ message: 'Email & password or NHI & email required' });
+    if (!email) {
+      console.log('No email provided');
+      return res.status(400).json({ message: 'Email is required' });
     }
 
+    if (!NHI && !password) {
+      console.log('No NHI or password provided');
+      return res.status(400).json({ message: 'Either NHI or password is required' });
+    }
 
-    // Find user by either email or NHI
-    console.log('Searching for user with:', { email, NHI });
+    // Find user by email
+    console.log('Searching for user with email:', email);
     const user = await User.findOne({
-      where: 
-     { email },
-      });
+      where: { email }
+    });
 
     if (!user) {
-      console.log('No user found');
-      return res.status(401).json({ message: 'User not found' });
+      console.log('No user found with email:', email);
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     console.log('User found:', user.email);
 
-    // Validate password
-    if (password){
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      console.log('Invalid password');
-      return res.status(401).json({ message: 'Invalid password' });
+    // Validate credentials based on login method
+    if (password) {
+      // Password login
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        console.log('Invalid password');
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+    } else if (NHI) {
+      // NHI login
+      if (NHI !== user.NHI) {
+        console.log('Invalid NHI');
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
     }
-  }else if (NHI){
-    if (NHI != user.NHI) {
-      console.log('Invalid NHI');
-      return res.status(401).json({ message: 'Invalid NHI' });
-    }
-  }
 
     // Create token
     const token = jwt.sign(
@@ -69,7 +74,8 @@ exports.login = async (req, res) => {
     console.log('Login successful for user:', user.email);
     return res.status(200).json({
       message: 'Login successful',
-      user: userWithoutPassword
+      user: userWithoutPassword,
+      token
     });
   } catch (error) {
     console.error('Login error:', error);

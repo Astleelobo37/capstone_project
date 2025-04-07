@@ -25,7 +25,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../context/UserContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -77,281 +77,108 @@ const Form = styled('form')(({ theme }) => ({
 }));
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    NHI: '',
-    password: ''
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [nhi, setNhi] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [openForgotPassword, setOpenForgotPassword] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
-  const [resetNHI, setResetNHI] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [loginMethod, setLoginMethod] = useState('NHI'); // 'NHI' or 'password'
-  const {handleUpdateUser} = useUserContext();
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const validateForm = () => {
-    if (!formData.email) {
-      setError('Email is required');
-      return false;
-    }
-
-    if (loginMethod === 'NHI') {
-      if (!formData.NHI) {
-        setError('NHI number is required');
-        return false;
-      }
-      if (!/^NHI\d{7}$/.test(formData.NHI)) {
-        setError('NHI must be in format NHI followed by 7 digits');
-        return false;
-      }
-    } else {
-      if (!formData.password) {
-        setError('Password is required');
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    setError('');
 
-    setLoading(true);
     try {
-      console.log('Attempting login with:', {
-        email: formData.email,
-        NHI: loginMethod === 'NHI' ? formData.NHI : undefined,
-        password: loginMethod === 'password' ? formData.password : undefined
-      });
-
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.email,
-          NHI: loginMethod === 'NHI' ? formData.NHI : undefined,
-          password: loginMethod === 'password' ? formData.password : undefined
+          nhi,
+          password
         }),
       });
 
-      console.log('Login response status:', response.status);
-      console.log('Login response headers:', response.headers);
-      
-      const responseText = await response.text();
-      console.log('Raw response:', responseText);
-      
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('Failed to parse response as JSON:', parseError);
-        throw new Error('Invalid response from server');
-      }
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Invalid credentials');
-      }
-
-      setSuccessMessage('Login successful! Redirecting to dashboard...');
-      handleUpdateUser(data.user)
-      
-      setTimeout(() => {
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        login(data.user);
         navigate('/dashboard');
-      }, 2000);
-    } catch (err) {
-      console.error('Login error:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleForgotPassword = async (e) => {
-    e.preventDefault();
-    if (!resetEmail || !resetNHI) {
-      setError('Email and NHI are required');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: resetEmail, NHI: resetNHI }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Unable to process password reset request');
+      } else {
+        setError(data.message || 'Login failed. Please try again.');
       }
-
-      setSuccessMessage('Password reset instructions have been sent to your email');
-      setOpenForgotPassword(false);
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      setError(err.message || 'Login failed. Please try again.');
     }
   };
 
   return (
-    <Container component="main" maxWidth="sm">
-      <StyledPaper elevation={6}>
-        <StyledLockIcon>
-          <LockOutlinedIcon />
-        </StyledLockIcon>
-        <Typography component="h1" variant="h4" gutterBottom color="primary" sx={{ fontWeight: 600 }}>
-          Patient Login
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        p: 3,
+        bgcolor: 'background.default'
+      }}
+    >
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          width: '100%',
+          maxWidth: 400,
+          p: 4,
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 3
+        }}
+      >
+        <Typography variant="h4" component="h1" gutterBottom align="center">
+          Login
         </Typography>
-        
-        <Box sx={{ mb: 2 }}>
-          <Button
-            variant={loginMethod === 'NHI' ? 'contained' : 'outlined'}
-            onClick={() => setLoginMethod('NHI')}
-            sx={{ mr: 1 }}
-          >
-            Login with NHI
-          </Button>
-          <Button
-            variant={loginMethod === 'password' ? 'contained' : 'outlined'}
-            onClick={() => setLoginMethod('password')}
-          >
-            Login with Password
-          </Button>
-        </Box>
-
-        <Form onSubmit={handleLogin}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            label="Email Address"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            autoComplete="email"
-          />
-
-          {loginMethod === 'NHI' ? (
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="NHI Number"
-              name="NHI"
-              value={formData.NHI}
-              onChange={handleInputChange}
-              autoComplete="off"
-              helperText="Format: NHI followed by 7 digits"
-            />
-          ) : (
-            <FormControl variant="outlined" fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <OutlinedInput
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
-            </FormControl>
-          )}
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={loading}
-            sx={{ mt: 2, mb: 2 }}
-          >
-            {loading ? <CircularProgress size={24} /> : 'Sign In'}
-          </Button>
-
-          <Box sx={{ textAlign: 'center' }}>
-            <Link
-              component="button"
-              variant="body2"
-              onClick={() => setOpenForgotPassword(true)}
-            >
-              Forgot password?
-            </Link>
-          </Box>
-        </Form>
 
         {error && (
-          <Alert severity="error" sx={{ mt: 2 }}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
 
-        {successMessage && (
-          <Alert severity="success" sx={{ mt: 2 }}>
-            {successMessage}
-          </Alert>
-        )}
+        <TextField
+          fullWidth
+          label="NHI Number"
+          variant="outlined"
+          margin="normal"
+          value={nhi}
+          onChange={(e) => setNhi(e.target.value)}
+          required
+        />
 
-        <Dialog open={openForgotPassword} onClose={() => setOpenForgotPassword(false)}>
-          <DialogTitle>Reset Password</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Email Address"
-              type="email"
-              fullWidth
-              value={resetEmail}
-              onChange={(e) => setResetEmail(e.target.value)}
-            />
-            <TextField
-              margin="dense"
-              label="NHI Number"
-              fullWidth
-              value={resetNHI}
-              onChange={(e) => setResetNHI(e.target.value)}
-              helperText="Format: NHI followed by 7 digits"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenForgotPassword(false)}>Cancel</Button>
-            <Button onClick={handleForgotPassword} color="primary">
-              Reset Password
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </StyledPaper>
-    </Container>
+        <TextField
+          fullWidth
+          label="Password"
+          type="password"
+          variant="outlined"
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          size="large"
+          sx={{ mt: 3 }}
+        >
+          Login
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
