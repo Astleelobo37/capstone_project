@@ -15,14 +15,30 @@ import {
   Snackbar
 } from '@mui/material';
 import { Delete as DeleteIcon, Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
-import { useMask } from '../contexts/MaskContext';
+import { useMasks } from '../contexts/MaskContext';
+import axios from 'axios';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cart, updateCart, masks, updateMaskStock } = useMask();
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const { masks, loading: masksLoading, error: masksError, fetchMasks } = useMasks();
+  const [cart, setCart] = useState([]);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await fetchMasks();
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
+          setCart(JSON.parse(savedCart));
+        }
+      } catch (err) {
+        console.error('Failed to load data:', err);
+      }
+    };
+
+    loadData();
+  }, [fetchMasks]);
 
   const handleQuantityChange = async (maskId, newQuantity) => {
     try {
@@ -35,9 +51,11 @@ const Cart = () => {
       }
 
       if (newQuantity > mask.stock) {
-        setSnackbarMessage('Not enough stock available');
-        setSnackbarSeverity('error');
-        setOpenSnackbar(true);
+        setSnackbar({
+          open: true,
+          message: 'Not enough stock available',
+          severity: 'error'
+        });
         return;
       }
 
@@ -45,15 +63,20 @@ const Cart = () => {
         item.id === maskId ? { ...item, quantity: newQuantity } : item
       );
 
-      updateCart(updatedCart);
-      setSnackbarMessage('Cart updated successfully');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
+      setCart(updatedCart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      setSnackbar({
+        open: true,
+        message: 'Cart updated successfully',
+        severity: 'success'
+      });
     } catch (error) {
       console.error('Error updating quantity:', error);
-      setSnackbarMessage('Error updating quantity');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: 'Error updating quantity',
+        severity: 'error'
+      });
     }
   };
 
@@ -63,19 +86,30 @@ const Cart = () => {
       if (!mask) return;
 
       const updatedCart = cart.filter(item => item.id !== maskId);
-      updateCart(updatedCart);
+      setCart(updatedCart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
 
       // Update stock in the backend
-      await updateMaskStock(maskId, mask.stock + 1);
+      await axios.put(`http://localhost:4000/api/masks/${maskId}/stock`, {
+        stock: mask.stock + 1
+      }, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
-      setSnackbarMessage('Item removed from cart');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: 'Item removed from cart',
+        severity: 'success'
+      });
     } catch (error) {
       console.error('Error removing item:', error);
-      setSnackbarMessage('Error removing item');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: 'Error removing item',
+        severity: 'error'
+      });
     }
   };
 
@@ -97,28 +131,51 @@ const Cart = () => {
       for (const item of cart) {
         const mask = masks.find(m => m.id === item.id);
         if (mask) {
-          await updateMaskStock(item.id, mask.stock - item.quantity);
+          await axios.put(`http://localhost:4000/api/masks/${item.id}/stock`, {
+            stock: mask.stock - item.quantity
+          }, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
         }
       }
 
       // Clear the cart
-      updateCart([]);
+      setCart([]);
+      localStorage.removeItem('cart');
 
-      setSnackbarMessage('Order placed successfully!');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: 'Order placed successfully!',
+        severity: 'success'
+      });
       navigate('/dashboard');
     } catch (error) {
       console.error('Error during checkout:', error);
-      setSnackbarMessage('Error during checkout');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: 'Error during checkout',
+        severity: 'error'
+      });
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
+  if (masksLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (masksError) {
+    return (
+      <Box p={3}>
+        <Alert severity="error">{masksError}</Alert>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ 
@@ -262,17 +319,16 @@ const Cart = () => {
         </Grid>
 
         <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={snackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
         >
           <Alert
-            onClose={handleCloseSnackbar}
-            severity={snackbarSeverity}
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
             sx={{ width: '100%' }}
           >
-            {snackbarMessage}
+            {snackbar.message}
           </Alert>
         </Snackbar>
       </Container>

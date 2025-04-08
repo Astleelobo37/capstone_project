@@ -11,11 +11,6 @@ import {
   AppBar,
   Toolbar,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
   Alert,
   IconButton,
   Menu,
@@ -25,11 +20,13 @@ import {
   Select,
   Badge,
   Snackbar,
-  CircularProgress
+  CircularProgress,
+  CardActions,
+  Stack,
+  Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -60,29 +57,129 @@ const severityColors = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { masks, loading: masksLoading, error: masksError, fetchMasks, updateMaskStock, cart, updateCart } = useMasks();
+  const { masks, setMasks, loading: masksLoading, error: masksError, fetchMasks } = useMasks();
   const [testResults, setTestResults] = useState(null);
-  const [openUpload, setOpenUpload] = useState(false);
-  const [uploadFile, setUploadFile] = useState(null);
-  const [severity, setSeverity] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [cart, setCart] = useState([]);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+
+  // Hardcoded Fisher & Paykel masks
+  const fisherPaykelMasks = [
+    {
+      id: 1,
+      maskType: 'Fisher & Paykel Eson 2',
+      description: 'Full face mask for GOLD 1-2 COPD patients. Features a unique forehead support and soft silicone cushion for enhanced comfort.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/eson-2-full-face-mask-1.jpg',
+      price: 199.99,
+      stock: 15
+    },
+    {
+      id: 2,
+      maskType: 'Fisher & Paykel Vitera',
+      description: 'Full face mask for GOLD 2-3 COPD patients. Advanced seal technology with a flexible frame for better fit and comfort.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/vitera-full-face-mask-1.jpg',
+      price: 229.99,
+      stock: 12
+    },
+    {
+      id: 3,
+      maskType: 'Fisher & Paykel Simplus',
+      description: 'Full face mask for GOLD 3-4 COPD patients. Features a unique forehead support and soft silicone cushion for enhanced comfort.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/simplus-full-face-mask-1.jpg',
+      price: 189.99,
+      stock: 8
+    },
+    {
+      id: 4,
+      maskType: 'Fisher & Paykel Forma',
+      description: 'Full face mask for GOLD 4 COPD patients. Advanced seal technology with a flexible frame for better fit and comfort.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/forma-full-face-mask-1.jpg',
+      price: 249.99,
+      stock: 5
+    },
+    {
+      id: 5,
+      maskType: 'Fisher & Paykel Brevida',
+      description: 'Nasal mask for GOLD 1-2 COPD patients. Ultra-soft nasal cushion with minimal contact points.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/brevida-nasal-mask-1.jpg',
+      price: 179.99,
+      stock: 20
+    },
+    {
+      id: 6,
+      maskType: 'Fisher & Paykel Pilairo Q',
+      description: 'Nasal pillow mask for GOLD 2-3 COPD patients. Lightweight design with minimal headgear.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/pilairo-q-nasal-pillow-mask-1.jpg',
+      price: 169.99,
+      stock: 18
+    },
+    {
+      id: 7,
+      maskType: 'Fisher & Paykel Zest',
+      description: 'Nasal mask for GOLD 3-4 COPD patients. Features a unique forehead support and soft silicone cushion.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/zest-nasal-mask-1.jpg',
+      price: 189.99,
+      stock: 10
+    },
+    {
+      id: 8,
+      maskType: 'Fisher & Paykel Oracle HC452',
+      description: 'Oral mask for GOLD 1-2 COPD patients. Designed for mouth breathers with a comfortable seal.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/oracle-hc452-oral-mask-1.jpg',
+      price: 159.99,
+      stock: 15
+    },
+    {
+      id: 9,
+      maskType: 'Fisher & Paykel Evora Full',
+      description: 'Full face mask for GOLD 2-3 COPD patients. Features a unique forehead support and soft silicone cushion.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/evora-full-face-mask-1.jpg',
+      price: 219.99,
+      stock: 12
+    },
+    {
+      id: 10,
+      maskType: 'Fisher & Paykel Evora Nasal',
+      description: 'Nasal mask for GOLD 3-4 COPD patients. Advanced seal technology with a flexible frame.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/evora-nasal-mask-1.jpg',
+      price: 199.99,
+      stock: 8
+    },
+    {
+      id: 11,
+      maskType: 'Fisher & Paykel Brevida Plus',
+      description: 'Nasal mask for GOLD 4 COPD patients. Features a unique forehead support and soft silicone cushion.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/brevida-plus-nasal-mask-1.jpg',
+      price: 209.99,
+      stock: 6
+    },
+    {
+      id: 12,
+      maskType: 'Fisher & Paykel Vitera Plus',
+      description: 'Full face mask for GOLD 4 COPD patients. Advanced seal technology with a flexible frame.',
+      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/vitera-plus-full-face-mask-1.jpg',
+      price: 239.99,
+      stock: 4
+    }
+  ];
 
   useEffect(() => {
     const loadData = async () => {
       try {
         await fetchMasks();
-        await fetchTestResults();
+        // Only fetch test results if user is authenticated
+        if (user && localStorage.getItem('token')) {
+          await fetchTestResults();
+        }
         const savedCart = localStorage.getItem('cart');
         if (savedCart) {
-          updateCart(JSON.parse(savedCart));
+          setCart(JSON.parse(savedCart));
         }
       } catch (err) {
+        console.error('Error loading data:', err);
         setError('Failed to load data');
       } finally {
         setLoading(false);
@@ -90,83 +187,75 @@ const Dashboard = () => {
     };
 
     loadData();
-  }, [fetchMasks, updateCart]);
+  }, [fetchMasks, user]);
 
   const fetchTestResults = async () => {
-    if (!user) {
-      console.log('No user data found, redirecting to login');
-      navigate('/login');
-      return;
-    }
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('No token found, redirecting to login');
-      navigate('/login');
+    if (!user || !localStorage.getItem('token')) {
       return;
     }
 
     try {
-      console.log('Making API call to /api/test-results/' + user.id + '/latest');
       const response = await axios.get(`http://localhost:4000/api/test-results/${user.id}/latest`, {
         headers: {
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${localStorage.getItem('token')}`,
         },
       });
       
-      console.log('Test results API response status:', response.status);
-      if (response.status === 401) {
-        console.log('Unauthorized access, redirecting to login');
-        navigate('/login');
-        return;
+      if (response.data) {
+        setTestResults(response.data);
       }
-      
-      console.log('Received test results data:', response.data);
-      setTestResults(response.data);
-      setSeverity(response.data.status);
     } catch (err) {
-      console.error('Error in fetchTestResults:', err);
-      setError('Failed to fetch test results: ' + (err.response?.data?.message || err.message));
+      console.error('Error fetching test results:', err);
+      // Don't set error state for test results failure as it's not critical
     }
   };
 
   const handleAddToCart = async (mask) => {
+    if (mask.stock <= 0) {
+      setSnackbar({
+        open: true,
+        message: 'This item is out of stock',
+        severity: 'error'
+      });
+      return;
+    }
+
     try {
-      if (mask.stock <= 0) {
-        setSnackbarMessage('This item is out of stock');
-        setSnackbarSeverity('error');
-        setOpenSnackbar(true);
-        return;
-      }
-
-      // Check if item already exists in cart
-      const existingItem = cart.find(item => item.id === mask.id);
-      if (existingItem) {
-        if (existingItem.quantity >= mask.stock) {
-          setSnackbarMessage('Not enough stock available');
-          setSnackbarSeverity('error');
-          setOpenSnackbar(true);
-          return;
+      // Update stock on backend
+      const response = await axios.put(`http://localhost:4000/api/masks/${mask.id}/stock`, {
+        stock: mask.stock - 1
+      }, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-        const updatedCart = cart.map(item =>
-          item.id === mask.id ? { ...item, quantity: item.quantity + 1 } : item
+      });
+
+      if (response.data) {
+        // Update local masks state
+        const updatedMasks = masks.map(m => 
+          m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
         );
-        updateCart(updatedCart);
-      } else {
-        updateCart([...cart, { ...mask, quantity: 1 }]);
+        setMasks(updatedMasks);
+
+        // Update cart
+        const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+        const updatedCart = [...currentCart, { ...mask, quantity: 1 }];
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+        setCart(updatedCart);
+
+        setSnackbar({
+          open: true,
+          message: `${mask.maskType} added to cart`,
+          severity: 'success'
+        });
       }
-
-      // Update stock in the backend
-      await updateMaskStock(mask.id, mask.stock - 1);
-
-      setSnackbarMessage('Item added to cart');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      setSnackbarMessage('Error adding to cart');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
+    } catch (err) {
+      console.error('Error updating stock:', err);
+      setSnackbar({
+        open: true,
+        message: err.response?.data?.message || 'Failed to add item to cart. Please try again.',
+        severity: 'error'
+      });
     }
   };
 
@@ -187,16 +276,20 @@ const Dashboard = () => {
       });
 
       // Update local state
-      updateCart(updatedCart);
+      setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
-      setSnackbarMessage('Item removed from cart');
-      setSnackbarSeverity('info');
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: 'Item removed from cart',
+        severity: 'info'
+      });
     } catch (err) {
       console.error('Error updating stock:', err);
-      setSnackbarMessage('Failed to update stock');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: 'Failed to update stock',
+        severity: 'error'
+      });
     }
   };
 
@@ -205,7 +298,7 @@ const Dashboard = () => {
       handleRemoveFromCart(maskId);
       return;
     }
-    updateCart(prevCart =>
+    setCart(prevCart =>
       prevCart.map(item =>
         item.id === maskId ? { ...item, quantity } : item
       )
@@ -232,44 +325,19 @@ const Dashboard = () => {
         throw new Error('Failed to place order');
       }
 
-      updateCart([]);
-      setSnackbarMessage('Order placed successfully!');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
+      setCart([]);
+      setSnackbar({
+        open: true,
+        message: 'Order placed successfully!',
+        severity: 'success'
+      });
     } catch (err) {
       setError('Failed to place order: ' + err.message);
-      setSnackbarMessage('Failed to place order');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
-    }
-  };
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('file', uploadFile);
-    formData.append('userId', user.id);
-    formData.append('severity', severity);
-
-    try {
-      const response = await axios.post('/api/test-results/upload', formData, {
-        headers: {
-          'authorization': `token ${user.token}`
-        },
+      setSnackbar({
+        open: true,
+        message: 'Failed to place order',
+        severity: 'error'
       });
-
-      if (!response.ok) throw new Error('Upload failed');
-
-      setOpenUpload(false);
-      fetchTestResults();
-    } catch (err) {
-      setError('Failed to upload test results');
-      setSnackbarMessage('Failed to upload test results');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -290,10 +358,6 @@ const Dashboard = () => {
   // Filter for non-ResMed masks (IDs 1-10)
   const filteredMasks = masks.filter(mask => mask.id <= 10);
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -305,14 +369,230 @@ const Dashboard = () => {
   if (error) {
     return (
       <Box p={3}>
-        <Alert severity="error">{error}</Alert>
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
       </Box>
     );
   }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Container sx={{ mt: 4, mb: 4 }}>
+      {/* Hero Section */}
+      <Box
+        sx={{
+          background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+          color: 'white',
+          py: 8,
+          mb: 6
+        }}
+      >
+        <Container maxWidth="xl">
+          <Typography variant="h3" component="h1" gutterBottom align="center" sx={{ fontWeight: 600 }}>
+            Breathe Easier, Live Better
+          </Typography>
+          <Typography variant="h6" align="center" sx={{ mb: 4, opacity: 0.9 }}>
+            Get your prescribed COPD respiratory equipment delivered directly to your home in as little as 2 weeks.
+          </Typography>
+        </Container>
+      </Box>
+
+      {/* How It Works */}
+      <Container maxWidth="md" sx={{ mb: 8 }}>
+        <Typography variant="h5" gutterBottom align="center" sx={{ mb: 6, fontWeight: 600 }}>
+          How We Work!
+        </Typography>
+        <Box sx={{ position: 'relative' }}>
+          {/* Vertical line connecting steps */}
+          <Box
+            sx={{
+              position: 'absolute',
+              left: { xs: '20px', md: '50%' },
+              transform: { xs: 'none', md: 'translateX(-50%)' },
+              top: '40px',
+              bottom: '40px',
+              width: '2px',
+              bgcolor: 'primary.main',
+              opacity: 0.3
+            }}
+          />
+          <Grid container spacing={4} direction="column">
+            <Grid item xs={12}>
+              <Paper 
+                sx={{ 
+                  p: 4, 
+                  position: 'relative',
+                  ml: { xs: 6, md: 0 },
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    transition: 'transform 0.3s ease-in-out'
+                  }
+                }}
+                elevation={3}
+              >
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    left: { xs: -24, md: '50%' },
+                    transform: { xs: 'none', md: 'translateX(-50%)' },
+                    top: { xs: '50%', md: -24 },
+                    marginTop: { xs: '-24px', md: 0 },
+                    fontWeight: 'bold',
+                    fontSize: '1.25rem',
+                    zIndex: 1
+                  }}
+                >
+                  1
+                </Box>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                    Prescription Upload
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '600px', margin: '0 auto' }}>
+                    Upload your doctor's prescription for respiratory equipment and our team will verify it.
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper 
+                sx={{ 
+                  p: 4, 
+                  position: 'relative',
+                  ml: { xs: 6, md: 0 },
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    transition: 'transform 0.3s ease-in-out'
+                  }
+                }}
+                elevation={3}
+              >
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    left: { xs: -24, md: '50%' },
+                    transform: { xs: 'none', md: 'translateX(-50%)' },
+                    top: { xs: '50%', md: -24 },
+                    marginTop: { xs: '-24px', md: 0 },
+                    fontWeight: 'bold',
+                    fontSize: '1.25rem',
+                    zIndex: 1
+                  }}
+                >
+                  2
+                </Box>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                    Virtual Fitting
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '600px', margin: '0 auto' }}>
+                    Use our virtual app to get the perfect fit for your mask without leaving home.
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper 
+                sx={{ 
+                  p: 4, 
+                  position: 'relative',
+                  ml: { xs: 6, md: 0 },
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    transition: 'transform 0.3s ease-in-out'
+                  }
+                }}
+                elevation={3}
+              >
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    left: { xs: -24, md: '50%' },
+                    transform: { xs: 'none', md: 'translateX(-50%)' },
+                    top: { xs: '50%', md: -24 },
+                    marginTop: { xs: '-24px', md: 0 },
+                    fontWeight: 'bold',
+                    fontSize: '1.25rem',
+                    zIndex: 1
+                  }}
+                >
+                  3
+                </Box>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                    Fast Delivery
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '600px', margin: '0 auto' }}>
+                    Receive your equipment at your doorstep within 2 weeks, with full setup instructions.
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
+
+      {/* Statistics */}
+      <Box sx={{ bgcolor: 'primary.main', color: 'white', py: 6, mb: 8 }}>
+        <Container maxWidth="xl">
+          <Grid container spacing={4} justifyContent="center">
+            <Grid item xs={12} sm={3}>
+              <Box textAlign="center">
+                <Typography variant="h4" gutterBottom>200k+</Typography>
+                <Typography variant="body2">New Zealanders with COPD</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Box textAlign="center">
+                <Typography variant="h4" gutterBottom>75%</Typography>
+                <Typography variant="body2">Equipment to Your Door</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Box textAlign="center">
+                <Typography variant="h4" gutterBottom>20%</Typography>
+                <Typography variant="body2">Faster Hospital Admission</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Box textAlign="center">
+                <Typography variant="h4" gutterBottom>90%</Typography>
+                <Typography variant="body2">Patient Satisfaction</Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Equipment Section */}
+      <Container maxWidth="xl">
+        <Typography variant="h5" gutterBottom align="center" sx={{ mb: 4 }}>
+          Equipment We Provide
+        </Typography>
         <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel>Filter by Severity</InputLabel>
@@ -331,110 +611,60 @@ const Dashboard = () => {
         </Box>
 
         <Grid container spacing={3}>
-          {filteredMasks.map((mask) => (
-            <Grid item xs={12} sm={6} md={4} key={mask.id}>
-              <StyledCard>
+          {fisherPaykelMasks.map((mask) => (
+            <Grid item key={mask.id} xs={12} sm={6} md={4} lg={3}>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardMedia
                   component="img"
                   height="200"
                   image={mask.imageUrl}
                   alt={mask.maskType}
+                  sx={{ objectFit: 'contain', p: 1 }}
                 />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography gutterBottom variant="h6" component="div">
                     {mask.maskType}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
+                  <Typography variant="body2" color="text.secondary">
                     {mask.description}
                   </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Chip
-                      label={`Stock: ${mask.stock}`}
-                      color={mask.stock > 10 ? 'success' : 'error'}
-                    />
-                    <Typography variant="h6" color="primary">
-                      ${mask.price}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      startIcon={<AddShoppingCartIcon />}
-                      onClick={() => handleAddToCart(mask)}
-                    >
-                      Add to Cart
-                    </Button>
-                    {cart.some(item => item.id === mask.id) && (
-                      <IconButton
-                        color="error"
-                        onClick={() => handleRemoveFromCart(mask.id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    )}
-                  </Box>
+                  <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+                    ${mask.price}
+                  </Typography>
+                  <Typography variant="body2" color={mask.stock > 0 ? 'success.main' : 'error.main'}>
+                    {mask.stock > 0 ? `${mask.stock} in stock` : 'Out of stock'}
+                  </Typography>
                 </CardContent>
-              </StyledCard>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => handleAddToCart(mask)}
+                    disabled={mask.stock <= 0}
+                  >
+                    Add to Cart
+                  </Button>
+                </CardActions>
+              </Card>
             </Grid>
           ))}
         </Grid>
 
         <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={snackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert
-            onClose={handleCloseSnackbar}
-            severity={snackbarSeverity}
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
             sx={{ width: '100%' }}
           >
-            {snackbarMessage}
+            {snackbar.message}
           </Alert>
         </Snackbar>
       </Container>
-
-      {/* Upload Results Dialog */}
-      <Dialog open={openUpload} onClose={() => setOpenUpload(false)}>
-        <DialogTitle>Upload Test Results</DialogTitle>
-        <DialogContent>
-          <Box component="form" onSubmit={handleUpload} sx={{ mt: 2 }}>
-            <TextField
-              type="file"
-              fullWidth
-              onChange={(e) => setUploadFile(e.target.files[0])}
-              sx={{ mb: 2 }}
-            />
-            <FormControl fullWidth>
-              <InputLabel>COPD Severity</InputLabel>
-              <Select
-                value={severity}
-                onChange={(e) => setSeverity(e.target.value)}
-                label="COPD Severity"
-                required
-              >
-                <MenuItem value="GOLD 1 - Mild">GOLD 1 - Mild</MenuItem>
-                <MenuItem value="GOLD 2 - Moderate">GOLD 2 - Moderate</MenuItem>
-                <MenuItem value="GOLD 3 - Severe">GOLD 3 - Severe</MenuItem>
-                <MenuItem value="GOLD 4 - Very Severe">GOLD 4 - Very Severe</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenUpload(false)}>Cancel</Button>
-          <Button
-            onClick={handleUpload}
-            variant="contained"
-            disabled={!uploadFile || !severity || loading}
-          >
-            Upload
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {error && (
         <Alert

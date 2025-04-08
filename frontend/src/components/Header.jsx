@@ -16,7 +16,7 @@ import {
   ListItemText,
   ListItemIcon
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -128,22 +128,52 @@ const Header = () => {
             gap: 2,
             justifyContent: 'flex-end'
           }}>
-            {menuItems.map((item) => (
+            <Box sx={{ display: 'flex', gap: 2 }}>
               <Button
-                key={item.text}
                 color="inherit"
-                startIcon={item.icon}
-                onClick={() => navigate(item.path)}
+                component={Link}
+                to="/"
+                sx={{ 
+                  color: location.pathname === '/' ? 'primary.main' : 'inherit',
+                  fontWeight: location.pathname === '/' ? 'bold' : 'normal'
+                }}
               >
-                {item.text}
+                Dashboard
               </Button>
-            ))}
-            <IconButton
-              color="inherit"
-              onClick={() => navigate('/cart')}
-            >
-              <ShoppingCartIcon />
-            </IconButton>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/other-masks"
+                sx={{ 
+                  color: location.pathname === '/other-masks' ? 'primary.main' : 'inherit',
+                  fontWeight: location.pathname === '/other-masks' ? 'bold' : 'normal'
+                }}
+              >
+                Other Masks
+              </Button>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/upload-results"
+                sx={{ 
+                  color: location.pathname === '/upload-results' ? 'primary.main' : 'inherit',
+                  fontWeight: location.pathname === '/upload-results' ? 'bold' : 'normal'
+                }}
+              >
+                Upload Results
+              </Button>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/cart"
+                sx={{ 
+                  color: location.pathname === '/cart' ? 'primary.main' : 'inherit',
+                  fontWeight: location.pathname === '/cart' ? 'bold' : 'normal'
+                }}
+              >
+                Cart
+              </Button>
+            </Box>
             <IconButton
               color="inherit"
               onClick={handleMenu}

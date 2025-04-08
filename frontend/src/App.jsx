@@ -11,6 +11,7 @@ import OtherMasks from './components/OtherMasks';
 import Cart from './components/Cart';
 import PrivateRoute from './components/PrivateRoute';
 import Chat from './components/Chat';
+import UploadResults from './components/UploadResults';
 import { Box } from '@mui/material';
 
 const theme = createTheme({
@@ -74,6 +75,14 @@ function App() {
                     element={
                       <PrivateRoute>
                         <OtherMasks />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/upload-results"
+                    element={
+                      <PrivateRoute>
+                        <UploadResults />
                       </PrivateRoute>
                     }
                   />
