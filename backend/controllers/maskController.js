@@ -108,7 +108,7 @@ const masks = [
     stock: 50,
     serialNumber: "RM-001",
     orderDate: "2024-04-05",
-    description: "COPD - Full Face Mask with memory foam cushion",
+    description: "ResMed - Full Face Mask with memory foam cushion",
     price: 199.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -118,7 +118,7 @@ const masks = [
     stock: 45,
     serialNumber: "RM-002",
     orderDate: "2024-04-05",
-    description: "COPD - Nasal Mask with magnetic clips",
+    description: "ResMed - Nasal Mask with magnetic clips",
     price: 179.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -128,7 +128,7 @@ const masks = [
     stock: 40,
     serialNumber: "RM-003",
     orderDate: "2024-04-05",
-    description: "COPD - Nasal Pillow Mask with minimal contact",
+    description: "ResMed - Nasal Pillow Mask with minimal contact",
     price: 159.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -138,7 +138,7 @@ const masks = [
     stock: 35,
     serialNumber: "RM-004",
     orderDate: "2024-04-05",
-    description: "COPD - Full Face Mask with memory foam cushion",
+    description: "ResMed - Full Face Mask with memory foam cushion",
     price: 229.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -148,7 +148,7 @@ const masks = [
     stock: 30,
     serialNumber: "RM-005",
     orderDate: "2024-04-05",
-    description: "COPD - Nasal Mask with memory foam cushion",
+    description: "ResMed - Nasal Mask with memory foam cushion",
     price: 209.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -158,7 +158,7 @@ const masks = [
     stock: 25,
     serialNumber: "RM-006",
     orderDate: "2024-04-05",
-    description: "COPD - Full Face Mask with 4-point headgear",
+    description: "ResMed - Full Face Mask with 4-point headgear",
     price: 189.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -168,7 +168,7 @@ const masks = [
     stock: 20,
     serialNumber: "RM-007",
     orderDate: "2024-04-05",
-    description: "COPD - Nasal Mask with quick-release clips",
+    description: "ResMed - Nasal Mask with quick-release clips",
     price: 169.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -178,7 +178,7 @@ const masks = [
     stock: 15,
     serialNumber: "RM-008",
     orderDate: "2024-04-05",
-    description: "COPD - Nasal Pillow Mask with rotating elbow",
+    description: "ResMed - Nasal Pillow Mask with rotating elbow",
     price: 149.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -188,7 +188,7 @@ const masks = [
     stock: 10,
     serialNumber: "RM-009",
     orderDate: "2024-04-05",
-    description: "COPD - Hybrid Mask with nasal pillows and mouth cushion",
+    description: "ResMed - Hybrid Mask with nasal pillows and mouth cushion",
     price: 199.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   },
@@ -198,7 +198,7 @@ const masks = [
     stock: 5,
     serialNumber: "RM-010",
     orderDate: "2024-04-05",
-    description: "COPD - Full Face Mask with advanced seal technology",
+    description: "ResMed - Full Face Mask with advanced seal technology",
     price: 219.99,
     imageUrl: "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
   }

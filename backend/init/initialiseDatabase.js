@@ -46,6 +46,14 @@ async function populateDatabase() {
         }
         console.log(`Added ${testResults.length} test results`);
 
+        console.log("Loading masks from JSON...");
+        const masks = await loadMasks();
+        console.log(`Found ${masks.length} mask results to add`);
+        for (const result of masks) {
+            await Models.Mask.create(result);
+        }
+        console.log(`Added ${masks.length} mask results`);
+
     } catch (error) {
         console.error("Error populating database:", error);
         throw error;
@@ -98,4 +106,27 @@ async function loadTestResults() {
     }
 }
 
+async function loadMasks() {
+    try {
+        const filePath = path.join(__dirname, '../../data/masks.json');
+        console.log(`Attempting to read masks results from: ${filePath}`);
+        const masksData = JSON.parse(
+            fs.readFileSync(filePath, 'utf8')
+        );
+        console.log(`Successfully read test results data: ${JSON.stringify(masksData, null, 2)}`);
+
+        return masksData.map(result => ({
+            userId: result.userId, // Note: converting from userid to userId to match model
+            maskType: result.maskType,
+            stock: result.stock
+            serialNumber: result.serialNumber,
+            orderDate: result.orderDate 
+            description: result.description,
+            price: result.price,
+        }));
+    } catch (error) {
+        console.error("Error loading mask results:", error);
+        return [];
+    }
+}
 module.exports = initialiseDatabase; 

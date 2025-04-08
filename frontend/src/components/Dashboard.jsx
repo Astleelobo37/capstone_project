@@ -71,7 +71,7 @@ const Dashboard = () => {
       id: 1,
       maskType: 'Fisher & Paykel Eson 2',
       description: 'Full face mask for GOLD 1-2 COPD patients. Features a unique forehead support and soft silicone cushion for enhanced comfort.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/eson-2-full-face-mask-1.jpg',
+      imageUrl: '/images/masks/Eason2.jpeg',
       price: 199.99,
       stock: 15
     },
@@ -79,7 +79,7 @@ const Dashboard = () => {
       id: 2,
       maskType: 'Fisher & Paykel Vitera',
       description: 'Full face mask for GOLD 2-3 COPD patients. Advanced seal technology with a flexible frame for better fit and comfort.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/vitera-full-face-mask-1.jpg',
+      imageUrl: '/images/masks/Vitera.jpeg',
       price: 229.99,
       stock: 12
     },
@@ -87,7 +87,7 @@ const Dashboard = () => {
       id: 3,
       maskType: 'Fisher & Paykel Simplus',
       description: 'Full face mask for GOLD 3-4 COPD patients. Features a unique forehead support and soft silicone cushion for enhanced comfort.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/simplus-full-face-mask-1.jpg',
+      imageUrl: '/images/masks/simplus.jpeg',
       price: 189.99,
       stock: 8
     },
@@ -95,7 +95,7 @@ const Dashboard = () => {
       id: 4,
       maskType: 'Fisher & Paykel Forma',
       description: 'Full face mask for GOLD 4 COPD patients. Advanced seal technology with a flexible frame for better fit and comfort.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/forma-full-face-mask-1.jpg',
+      imageUrl: '/images/masks/forma.jpeg',
       price: 249.99,
       stock: 5
     },
@@ -103,7 +103,7 @@ const Dashboard = () => {
       id: 5,
       maskType: 'Fisher & Paykel Brevida',
       description: 'Nasal mask for GOLD 1-2 COPD patients. Ultra-soft nasal cushion with minimal contact points.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/brevida-nasal-mask-1.jpg',
+      imageUrl: '/images/masks/brevida.jpeg',
       price: 179.99,
       stock: 20
     },
@@ -111,7 +111,7 @@ const Dashboard = () => {
       id: 6,
       maskType: 'Fisher & Paykel Pilairo Q',
       description: 'Nasal pillow mask for GOLD 2-3 COPD patients. Lightweight design with minimal headgear.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/pilairo-q-nasal-pillow-mask-1.jpg',
+      imageUrl: '/images/masks/Pilairo Q.jpeg',
       price: 169.99,
       stock: 18
     },
@@ -119,7 +119,7 @@ const Dashboard = () => {
       id: 7,
       maskType: 'Fisher & Paykel Zest',
       description: 'Nasal mask for GOLD 3-4 COPD patients. Features a unique forehead support and soft silicone cushion.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/zest-nasal-mask-1.jpg',
+      imageUrl: '/images/masks/zest.jpeg',
       price: 189.99,
       stock: 10
     },
@@ -127,7 +127,7 @@ const Dashboard = () => {
       id: 8,
       maskType: 'Fisher & Paykel Oracle HC452',
       description: 'Oral mask for GOLD 1-2 COPD patients. Designed for mouth breathers with a comfortable seal.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/oracle-hc452-oral-mask-1.jpg',
+      imageUrl: '/images/masks/Oracle HC452.jpeg',
       price: 159.99,
       stock: 15
     },
@@ -135,7 +135,7 @@ const Dashboard = () => {
       id: 9,
       maskType: 'Fisher & Paykel Evora Full',
       description: 'Full face mask for GOLD 2-3 COPD patients. Features a unique forehead support and soft silicone cushion.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/evora-full-face-mask-1.jpg',
+      imageUrl: '/images/masks/Evora Full.jpeg',
       price: 219.99,
       stock: 12
     },
@@ -143,7 +143,7 @@ const Dashboard = () => {
       id: 10,
       maskType: 'Fisher & Paykel Evora Nasal',
       description: 'Nasal mask for GOLD 3-4 COPD patients. Advanced seal technology with a flexible frame.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/evora-nasal-mask-1.jpg',
+      imageUrl: '/images/masks/Evora Nasal.jpeg',
       price: 199.99,
       stock: 8
     },
@@ -151,7 +151,7 @@ const Dashboard = () => {
       id: 11,
       maskType: 'Fisher & Paykel Brevida Plus',
       description: 'Nasal mask for GOLD 4 COPD patients. Features a unique forehead support and soft silicone cushion.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/brevida-plus-nasal-mask-1.jpg',
+      imageUrl: '/images/masks/Brevida Plus.jpeg',
       price: 209.99,
       stock: 6
     },
@@ -159,7 +159,7 @@ const Dashboard = () => {
       id: 12,
       maskType: 'Fisher & Paykel Vitera Plus',
       description: 'Full face mask for GOLD 4 COPD patients. Advanced seal technology with a flexible frame.',
-      imageUrl: 'https://www.fphcare.com/au/wp-content/uploads/sites/3/2020/05/vitera-plus-full-face-mask-1.jpg',
+      imageUrl: '/images/masks/Vitera Plus.jpeg',
       price: 239.99,
       stock: 4
     }

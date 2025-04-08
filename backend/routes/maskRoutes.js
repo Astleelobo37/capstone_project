@@ -30,4 +30,25 @@ router.put('/:id/stock', authController.verifyToken, (req, res, next) => {
   maskController.updateMaskStock(req, res).catch(next);
 });
 
+// GET user by ID with their test results
+router.get("/:id", (req, res) => {
+  Controllers.maskController.getmaskDetails(req, res);
+});
+
+// POST create new user
+router.post("/", (req, res) => {
+  Controllers.maskController.createMask(req.body, res);
+});
+
+// PUT update user
+router.put("/:id", (req, res) => {
+  Controllers.maskController.updateMask(req, res);
+});
+
+// DELETE user
+router.delete("/:id", (req, res) => {
+  Controllers.maskController.deletemask(req, res);
+});
+
+
 module.exports = router; 
