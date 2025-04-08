@@ -23,7 +23,7 @@ import { useCart } from '../contexts/CartContext';
 
 const OtherMasks = () => {
   const { user } = useAuth();
-  const { masks, setMasks, loading: masksLoading, error: masksError, fetchMasks } = useMasks();
+  const { masks, loading: masksLoading, error: masksError, fetchMasks } = useMasks();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
   const { addToCart } = useCart();
 
@@ -53,7 +53,18 @@ const OtherMasks = () => {
     }
 
     try {
-      // Update stock on backend
+      // First add to cart to ensure the item is properly formatted
+      const cartItem = {
+        id: mask.id,
+        maskType: mask.name,
+        description: mask.description,
+        imageUrl: mask.image,
+        price: mask.price,
+        stock: mask.stock
+      };
+      addToCart(cartItem);
+
+      // Then update stock on backend
       await axios.put(`http://localhost:4000/api/masks/${mask.id}/stock`, {
         stock: mask.stock - 1
       }, {
@@ -62,23 +73,8 @@ const OtherMasks = () => {
         }
       });
 
-      // Update local state
-      setMasks(prevMasks => 
-        prevMasks.map(m => 
-          m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
-        )
-      );
-
-      // Add to cart with correct property names
-      const cartItem = {
-        id: mask.id,
-        maskType: mask.name,
-        description: mask.description,
-        imageUrl: mask.image,
-        price: mask.price,
-        stock: mask.stock - 1
-      };
-      addToCart(cartItem);
+      // Refresh masks data instead of updating local state
+      await fetchMasks();
 
       setSnackbar({
         open: true,
@@ -86,12 +82,20 @@ const OtherMasks = () => {
         severity: 'success'
       });
     } catch (err) {
-      console.error('Error updating stock:', err);
-      setSnackbar({
-        open: true,
-        message: err.response?.data?.message || 'Failed to add item to cart. Please try again.',
-        severity: 'error'
-      });
+      console.error('Error in handleAddToCart:', err);
+      if (err.response?.status === 401) {
+        setSnackbar({
+          open: true,
+          message: 'Please log in to add items to cart',
+          severity: 'error'
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: 'Failed to add item to cart. Please try again.',
+          severity: 'error'
+        });
+      }
     }
   };
 

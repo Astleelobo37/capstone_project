@@ -58,13 +58,12 @@ const severityColors = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { masks, setMasks, loading: masksLoading, error: masksError, fetchMasks } = useMasks();
+  const { loading: masksLoading, error: masksError } = useMasks();
   const [testResults, setTestResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [cart, setCart] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
   const { addToCart } = useCart();
   const [fisherPaykelMasks, setFisherPaykelMasks] = useState([
@@ -169,14 +168,9 @@ const Dashboard = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        await fetchMasks();
         // Only fetch test results if user is authenticated
         if (user && localStorage.getItem('token')) {
-        await fetchTestResults();
-        }
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-          setCart(JSON.parse(savedCart));
+          await fetchTestResults();
         }
       } catch (err) {
         console.error('Error loading data:', err);
@@ -187,7 +181,7 @@ const Dashboard = () => {
     };
 
     loadData();
-  }, [fetchMasks, user]);
+  }, [user]);
 
   const fetchTestResults = async () => {
     if (!user || !localStorage.getItem('token')) {
@@ -221,8 +215,7 @@ const Dashboard = () => {
     }
 
     try {
-      // For Fisher & Paykel masks, we don't need to update the backend
-      // Just update the local state
+      // Update local state
       const updatedMasks = fisherPaykelMasks.map(m => 
         m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
       );
@@ -341,9 +334,6 @@ const Dashboard = () => {
       return maskSeverity && maskSeverity.some(s => s.includes(filter));
     });
   };
-
-  // Filter for non-ResMed masks (IDs 1-10)
-  const filteredMasks = masks.filter(mask => mask.id <= 10);
 
   if (loading) {
     return (
@@ -598,7 +588,7 @@ const Dashboard = () => {
         </Box>
 
         <Grid container spacing={3}>
-          {fisherPaykelMasks.map((mask) => (
+          {filterMasksBySeverity(fisherPaykelMasks).map((mask) => (
             <Grid item key={mask.id} xs={12} sm={6} md={4} lg={3}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardMedia
