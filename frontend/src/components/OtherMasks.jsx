@@ -132,7 +132,7 @@ const OtherMasks = () => {
         <Grid item xs={12}>
           <Grid container spacing={3}>
             {filteredMasks.map((mask) => (
-              <Grid item key={mask.id} xs={12} sm={6} md={4} lg={3}>
+              <Grid item key={mask.id} size={{xs:12,sm:6,md:4,lg:3}}>
                 <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <CardMedia
                     component="img"

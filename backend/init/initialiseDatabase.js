@@ -62,7 +62,7 @@ async function populateDatabase() {
 
 async function loadUsers() {
     try {
-        const filePath = path.join(__dirname, '../../data/users.json');
+        const filePath = path.join(__dirname, '../data/users.json');
         console.log(`Attempting to read users from: ${filePath}`);
         const usersData = JSON.parse(
             fs.readFileSync(filePath, 'utf8')
@@ -86,7 +86,7 @@ async function loadUsers() {
 
 async function loadTestResults() {
     try {
-        const filePath = path.join(__dirname, '../../data/testResults.json');
+        const filePath = path.join(__dirname, '../data/testResults.json');
         console.log(`Attempting to read test results from: ${filePath}`);
         const testResultsData = JSON.parse(
             fs.readFileSync(filePath, 'utf8')
@@ -108,7 +108,7 @@ async function loadTestResults() {
 
 async function loadMasks() {
     try {
-        const filePath = path.join(__dirname, '../../data/masks.json');
+        const filePath = path.join(__dirname, '../data/masks.json');
         console.log(`Attempting to read masks results from: ${filePath}`);
         const masksData = JSON.parse(
             fs.readFileSync(filePath, 'utf8')
@@ -118,11 +118,12 @@ async function loadMasks() {
         return masksData.map(result => ({
             userId: result.userId, // Note: converting from userid to userId to match model
             maskType: result.maskType,
-            stock: result.stock
+            stock: result.stock,
             serialNumber: result.serialNumber,
-            orderDate: result.orderDate 
+            orderDate: result.orderDate,
             description: result.description,
             price: result.price,
+            imageUrl: result.imageUrl,
         }));
     } catch (error) {
         console.error("Error loading mask results:", error);

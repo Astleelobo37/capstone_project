@@ -66,104 +66,7 @@ const Dashboard = () => {
   const [filter, setFilter] = useState('all');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
   const { addToCart } = useCart();
-  const [fisherPaykelMasks, setFisherPaykelMasks] = useState([
-    {
-      id: 1,
-      maskType: 'Fisher & Paykel Eson 2',
-      description: 'Full face mask for GOLD 1-2 COPD patients. Features a unique forehead support and soft silicone cushion for enhanced comfort.',
-      imageUrl: '/images/masks/Eason2.jpeg',
-      price: 199.99,
-      stock: 15
-    },
-    {
-      id: 2,
-      maskType: 'Fisher & Paykel Vitera',
-      description: 'Full face mask for GOLD 2-3 COPD patients. Advanced seal technology with a flexible frame for better fit and comfort.',
-      imageUrl: '/images/masks/Vitera.jpeg',
-      price: 229.99,
-      stock: 12
-    },
-    {
-      id: 3,
-      maskType: 'Fisher & Paykel Simplus',
-      description: 'Full face mask for GOLD 3-4 COPD patients. Features a unique forehead support and soft silicone cushion for enhanced comfort.',
-      imageUrl: '/images/masks/simplus.jpeg',
-      price: 189.99,
-      stock: 8
-    },
-    {
-      id: 4,
-      maskType: 'Fisher & Paykel Forma',
-      description: 'Full face mask for GOLD 4 COPD patients. Advanced seal technology with a flexible frame for better fit and comfort.',
-      imageUrl: '/images/masks/forma.jpeg',
-      price: 249.99,
-      stock: 5
-    },
-    {
-      id: 5,
-      maskType: 'Fisher & Paykel Brevida',
-      description: 'Nasal mask for GOLD 1-2 COPD patients. Ultra-soft nasal cushion with minimal contact points.',
-      imageUrl: '/images/masks/brevida.jpeg',
-      price: 179.99,
-      stock: 20
-    },
-    {
-      id: 6,
-      maskType: 'Fisher & Paykel Pilairo Q',
-      description: 'Nasal pillow mask for GOLD 2-3 COPD patients. Lightweight design with minimal headgear.',
-      imageUrl: '/images/masks/Pilairo Q.jpeg',
-      price: 169.99,
-      stock: 18
-    },
-    {
-      id: 7,
-      maskType: 'Fisher & Paykel Zest',
-      description: 'Nasal mask for GOLD 3-4 COPD patients. Features a unique forehead support and soft silicone cushion.',
-      imageUrl: '/images/masks/zest.jpeg',
-      price: 189.99,
-      stock: 10
-    },
-    {
-      id: 8,
-      maskType: 'Fisher & Paykel Oracle HC452',
-      description: 'Oral mask for GOLD 1-2 COPD patients. Designed for mouth breathers with a comfortable seal.',
-      imageUrl: '/images/masks/Oracle HC452.jpeg',
-      price: 159.99,
-      stock: 15
-    },
-    {
-      id: 9,
-      maskType: 'Fisher & Paykel Evora Full',
-      description: 'Full face mask for GOLD 2-3 COPD patients. Features a unique forehead support and soft silicone cushion.',
-      imageUrl: '/images/masks/Evora Full.jpeg',
-      price: 219.99,
-      stock: 12
-    },
-    {
-      id: 10,
-      maskType: 'Fisher & Paykel Evora Nasal',
-      description: 'Nasal mask for GOLD 3-4 COPD patients. Advanced seal technology with a flexible frame.',
-      imageUrl: '/images/masks/Evora Nasal.jpeg',
-      price: 199.99,
-      stock: 8
-    },
-    {
-      id: 11,
-      maskType: 'Fisher & Paykel Brevida Plus',
-      description: 'Nasal mask for GOLD 4 COPD patients. Features a unique forehead support and soft silicone cushion.',
-      imageUrl: '/images/masks/Brevida Plus.jpeg',
-      price: 209.99,
-      stock: 6
-    },
-    {
-      id: 12,
-      maskType: 'Fisher & Paykel Vitera Plus',
-      description: 'Full face mask for GOLD 4 COPD patients. Advanced seal technology with a flexible frame.',
-      imageUrl: '/images/masks/Vitera Plus.jpeg',
-      price: 239.99,
-      stock: 4
-    }
-  ]);
+  const [masks, setMasks] = useState([])
 
   useEffect(() => {
     const loadData = async () => {
@@ -171,6 +74,7 @@ const Dashboard = () => {
         // Only fetch test results if user is authenticated
         if (user && localStorage.getItem('token')) {
           await fetchTestResults();
+          await fetchMasks();
         }
       } catch (err) {
         console.error('Error loading data:', err);
@@ -184,12 +88,8 @@ const Dashboard = () => {
   }, [user]);
 
   const fetchTestResults = async () => {
-    if (!user || !localStorage.getItem('token')) {
-      return;
-    }
-
-    try {
-      const response = await axios.get(`http://localhost:4000/api/test-results/${user.id}/latest`, {
+        try {
+      const response = await axios.get(`/api/test-results/${user.id}/latest`, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('token')}`,
         },
@@ -197,6 +97,20 @@ const Dashboard = () => {
       
       if (response.data) {
         setTestResults(response.data);
+      }
+    } catch (err) {
+      console.error('Error fetching test results:', err);
+      // Don't set error state for test results failure as it's not critical
+    }
+  };
+
+  const fetchMasks = async () => {
+
+    try {
+      const response = await axios.get(`/api/masks`);
+      
+      if (response.data) {
+        setMasks(response.data);
       }
     } catch (err) {
       console.error('Error fetching test results:', err);
@@ -216,10 +130,10 @@ const Dashboard = () => {
 
     try {
       // Update local state
-      const updatedMasks = fisherPaykelMasks.map(m => 
+      const updatedMasks = masks.map(m => 
         m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
       );
-      setFisherPaykelMasks(updatedMasks);
+      setMasks(updatedMasks);
 
       // Add to cart
       addToCart(mask);
@@ -247,7 +161,7 @@ const Dashboard = () => {
     
     try {
       // Update stock on backend
-      await axios.put(`http://localhost:4000/api/masks/${maskId}/stock`, {
+      await axios.put(`/api/masks/${maskId}/stock`, {
         stock: itemToRemove.stock + itemToRemove.quantity
       }, {
         headers: {
@@ -588,8 +502,8 @@ const Dashboard = () => {
         </Box>
 
         <Grid container spacing={3}>
-          {filterMasksBySeverity(fisherPaykelMasks).map((mask) => (
-            <Grid item key={mask.id} xs={12} sm={6} md={4} lg={3}>
+          {filterMasksBySeverity(masks).map((mask) => (
+            <Grid item key={mask.id} size={{xs:12,sm:6,md:4,lg:3}}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardMedia
                   component="img"
