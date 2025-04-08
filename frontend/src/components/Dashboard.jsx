@@ -35,6 +35,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { useMasks } from '../contexts/MaskContext';
+import { useCart } from '../contexts/CartContext';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -65,9 +66,8 @@ const Dashboard = () => {
   const [filter, setFilter] = useState('all');
   const [cart, setCart] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
-
-  // Hardcoded Fisher & Paykel masks
-  const fisherPaykelMasks = [
+  const { addToCart } = useCart();
+  const [fisherPaykelMasks, setFisherPaykelMasks] = useState([
     {
       id: 1,
       maskType: 'Fisher & Paykel Eson 2',
@@ -164,7 +164,7 @@ const Dashboard = () => {
       price: 239.99,
       stock: 4
     }
-  ];
+  ]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -172,7 +172,7 @@ const Dashboard = () => {
         await fetchMasks();
         // Only fetch test results if user is authenticated
         if (user && localStorage.getItem('token')) {
-          await fetchTestResults();
+        await fetchTestResults();
         }
         const savedCart = localStorage.getItem('cart');
         if (savedCart) {
@@ -221,39 +221,26 @@ const Dashboard = () => {
     }
 
     try {
-      // Update stock on backend
-      const response = await axios.put(`http://localhost:4000/api/masks/${mask.id}/stock`, {
-        stock: mask.stock - 1
-      }, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      // For Fisher & Paykel masks, we don't need to update the backend
+      // Just update the local state
+      const updatedMasks = fisherPaykelMasks.map(m => 
+        m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
+      );
+      setFisherPaykelMasks(updatedMasks);
 
-      if (response.data) {
-        // Update local masks state
-        const updatedMasks = masks.map(m => 
-          m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
-        );
-        setMasks(updatedMasks);
+      // Add to cart
+      addToCart(mask);
 
-        // Update cart
-        const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
-        const updatedCart = [...currentCart, { ...mask, quantity: 1 }];
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
-        setCart(updatedCart);
-
-        setSnackbar({
-          open: true,
-          message: `${mask.maskType} added to cart`,
-          severity: 'success'
-        });
-      }
-    } catch (err) {
-      console.error('Error updating stock:', err);
       setSnackbar({
         open: true,
-        message: err.response?.data?.message || 'Failed to add item to cart. Please try again.',
+        message: `${mask.maskType} added to cart`,
+        severity: 'success'
+      });
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+      setSnackbar({
+        open: true,
+        message: 'Failed to add item to cart. Please try again.',
         severity: 'error'
       });
     }

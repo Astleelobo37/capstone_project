@@ -19,21 +19,18 @@ import { AddShoppingCart } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { useMasks } from '../contexts/MaskContext';
+import { useCart } from '../contexts/CartContext';
 
 const OtherMasks = () => {
   const { user } = useAuth();
-  const { masks, loading: masksLoading, error: masksError, fetchMasks } = useMasks();
-  const [cart, setCart] = useState([]);
+  const { masks, setMasks, loading: masksLoading, error: masksError, fetchMasks } = useMasks();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const loadData = async () => {
       try {
         await fetchMasks();
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-          setCart(JSON.parse(savedCart));
-        }
       } catch (err) {
         console.error('Failed to load data:', err);
       }
@@ -72,16 +69,20 @@ const OtherMasks = () => {
         )
       );
 
-      // Get current cart from localStorage
-      const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
-      
-      // Add item to cart
-      const updatedCart = [...currentCart, { ...mask, quantity: 1 }];
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      // Add to cart with correct property names
+      const cartItem = {
+        id: mask.id,
+        maskType: mask.name,
+        description: mask.description,
+        imageUrl: mask.image,
+        price: mask.price,
+        stock: mask.stock - 1
+      };
+      addToCart(cartItem);
 
       setSnackbar({
         open: true,
-        message: `${mask.maskType} added to cart`,
+        message: `${mask.name} added to cart`,
         severity: 'success'
       });
     } catch (err) {

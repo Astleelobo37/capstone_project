@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
 import { MaskProvider } from './contexts/MaskContext';
+import { CartProvider } from './contexts/CartContext';
 import Header from './components/Header';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -47,59 +48,61 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <MaskProvider>
-          <Router>
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              minHeight: '100vh',
-              width: '100%'
-            }}>
-              <Header />
-              <Box component="main" sx={{ 
-                flexGrow: 1, 
-                width: '100%',
-                overflow: 'auto'
+          <CartProvider>
+            <Router>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                minHeight: '100vh',
+                width: '100%'
               }}>
-                <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <PrivateRoute>
-                        <Dashboard />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route
-                    path="/other-masks"
-                    element={
-                      <PrivateRoute>
-                        <OtherMasks />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route
-                    path="/upload-results"
-                    element={
-                      <PrivateRoute>
-                        <UploadResults />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route
-                    path="/cart"
-                    element={
-                      <PrivateRoute>
-                        <Cart />
-                      </PrivateRoute>
-                    }
-                  />
-                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                </Routes>
+                <Header />
+                <Box component="main" sx={{ 
+                  flexGrow: 1, 
+                  width: '100%',
+                  overflow: 'auto'
+                }}>
+                  <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <PrivateRoute>
+                          <Dashboard />
+                        </PrivateRoute>
+                      }
+                    />
+                    <Route
+                      path="/other-masks"
+                      element={
+                        <PrivateRoute>
+                          <OtherMasks />
+                        </PrivateRoute>
+                      }
+                    />
+                    <Route
+                      path="/upload-results"
+                      element={
+                        <PrivateRoute>
+                          <UploadResults />
+                        </PrivateRoute>
+                      }
+                    />
+                    <Route
+                      path="/cart"
+                      element={
+                        <PrivateRoute>
+                          <Cart />
+                        </PrivateRoute>
+                      }
+                    />
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  </Routes>
+                </Box>
+                <Chat />
               </Box>
-              <Chat />
-            </Box>
-          </Router>
+            </Router>
+          </CartProvider>
         </MaskProvider>
       </AuthProvider>
     </ThemeProvider>
