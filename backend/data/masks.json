@@ -57,7 +57,7 @@
     "orderDate": "2024-01-10T10:15:00.000Z",
     "description": "Compact nasal mask with CapFit headgear. Ideal for mild to moderate COPD (GOLD 1-2) patients who require overnight oxygen support.",
     "price": 129.95,
-    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/EvoraNasal.jpeg"
   },
   {
     "id": 7,
@@ -67,7 +67,7 @@
     "orderDate": "2024-02-05T14:45:00.000Z",
     "description": "Full face mask with stability bar for high-pressure NIV therapy. Recommended for severe COPD exacerbations and GOLD 3-4 patients.",
     "price": 199.5,
-    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/Viteria.jpeg"
   },
   {
     "id": 8,
@@ -77,7 +77,7 @@
     "orderDate": "2024-01-22T09:30:00.000Z",
     "description": "Minimally invasive nasal pillows with AirPillow seal. Best for GOLD 1-2 COPD patients who experience claustrophobia with larger masks.",
     "price": 119.99,
-    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PBrevidaNasalPillowMask.jpeg"
   },
   {
     "id": 9,
@@ -87,7 +87,7 @@
     "orderDate": "2024-03-01T11:20:00.000Z",
     "description": "Compact full face mask with dynamic support. Designed for COPD patients requiring 24-hour ventilation support with minimal pressure points.",
     "price": 209.95,
-    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/EvoraFull.jpeg"
   },
   {
     "id": 10,
@@ -97,7 +97,7 @@
     "orderDate": "2023-11-28T13:10:00.000Z",
     "description": "Nasal mask with RollFit seal and easy-fit headgear. Appropriate for moderate COPD patients (GOLD 2-3) requiring nighttime ventilation.",
     "price": 139.5,
-    "imageUrl": "https://images.unsplash.com/photo-1584634731339-252c58abf4e6?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/Eason2.jpeg"
   },
   {
     "id": 11,
@@ -107,7 +107,7 @@
     "orderDate": "2024-02-18T15:45:00.000Z",
     "description": "Specialized oral-only interface for COPD patients who are unable to breathe through their nose or have nasal obstruction. Compatible with BiPAP therapy.",
     "price": 179.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108136-38380a7ae388?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/OracleHC452.jpeg"
   },
   {
     "id": 12,
@@ -117,7 +117,7 @@
     "orderDate": "2024-03-15T09:15:00.000Z",
     "description": "Hospital-grade non-vented NIV mask for acute COPD exacerbation treatment. Designed for intensive care settings with anti-asphyxiation valve.",
     "price": 275.0,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108144-47d1694e5c84?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PNivairoHospitalNIVMask.jpeg"
   },
   {
     "id": 13,
@@ -127,7 +127,7 @@
     "orderDate": "2023-10-10T14:20:00.000Z",
     "description": "Ultra-lightweight nasal pillows system with auto-adjusting AirPillow seal. Suitable for GOLD 1-2 COPD patients who are active sleepers.",
     "price": 124.95,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108152-af12781d33d4?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/PilairoQ.jpeg"
   },
   {
     "id": 14,
@@ -137,7 +137,7 @@
     "orderDate": "2024-01-05T16:30:00.000Z",
     "description": "Hospital-grade full face mask with under-chin design for severe COPD patients (GOLD 4) requiring continuous mechanical ventilation during exacerbations.",
     "price": 249.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PFlexiFit432FullFaceHospitalMask.jpeg"
   },
   {
     "id": 15,
@@ -147,7 +147,7 @@
     "orderDate": "2024-03-10T08:45:00.000Z",
     "description": "Full face mask with FlexiFoam cushion technology providing enhanced seal for GOLD 3-4 COPD patients who move frequently during sleep.",
     "price": 195.5,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108136-38380a7ae388?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PFormaFullFaceMask.jpeg"
   },
   {
     "id": 16,
@@ -157,7 +157,7 @@
     "orderDate": "2023-11-15T13:20:00.000Z",
     "description": "Compact nasal mask with premium headgear and frosted silicone seal. Ideal for moderate COPD patients (GOLD 2) requiring consistent nightly therapy.",
     "price": 134.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108144-47d1694e5c84?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/zest.jpeg"
   },
   {
     "id": 17,
@@ -167,7 +167,7 @@
     "orderDate": "2024-02-28T16:00:00.000Z",
     "description": "Specialized hospital ventilation mask with multiple ports for severe acute COPD exacerbations. Designed for ICU/emergency department use with high-flow oxygen.",
     "price": 295.0,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108152-af12781d33d4?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PRT045HospitalVentilationMask.jpeg"
   },
   {
     "id": 18,
@@ -177,7 +177,7 @@
     "orderDate": "2024-03-20T10:30:00.000Z",
     "description": "Ultra-compact nasal mask with minimal contact designed for GOLD 1-2 COPD patients who are new to therapy or have mild symptoms only.",
     "price": 149.95,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/EvoraNanoNasalMask.jpeg"
   },
   {
     "id": 19,
@@ -187,7 +187,7 @@
     "orderDate": "2024-01-15T09:45:00.000Z",
     "description": "Advanced hospital full face NIV mask with interchangeable seals for acute respiratory failure in end-stage COPD (GOLD 4). Features adjustable forehead support.",
     "price": 325.0,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108136-38380a7ae388?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PVisairoHospitalNIVFullFaceMask.png"
   },
   {
     "id": 20,
@@ -197,7 +197,7 @@
     "orderDate": "2023-12-05T11:15:00.000Z",
     "description": "360-degree rotating nasal pillows with minimalist headgear. Perfect for early-stage COPD patients (GOLD 1) who require occasional nighttime oxygen support.",
     "price": 135.5,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108144-47d1694e5c84?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&POpus360NasalPillowsMask.jpeg"
   },
   {
     "id": 21,
@@ -207,7 +207,7 @@
     "orderDate": "2024-02-10T14:00:00.000Z",
     "description": "Total face ventilation mask covering eyes, nose and mouth for severe COPD patients (GOLD 4) with facial skin breakdown from conventional masks. Hospital use.",
     "price": 349.99,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108152-af12781d33d4?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PF1totalFaceMask.jpeg"
   },
   {
     "id": 22,
@@ -217,7 +217,7 @@
     "orderDate": "2024-03-25T09:00:00.000Z",
     "description": "Latest generation nasal mask with enhanced RollFit+ seal technology. Suitable for GOLD 2-3 COPD patients requiring consistent CPAP/BiPAP therapy.",
     "price": 159.95,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108147-ca707f703325?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PEson3NasalMask.jpeg"
   },
   {
     "id": 23,
@@ -227,7 +227,7 @@
     "orderDate": "2024-01-30T15:30:00.000Z",
     "description": "Specialized pediatric hospital NIV mask for younger COPD patients (rare juvenile cases) or small adults with difficult fit issues.",
     "price": 265.0,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108136-38380a7ae388?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PRT046PediatricHospitalNIVMask.jpeg"
   },
   {
     "id": 24,
@@ -237,6 +237,6 @@
     "orderDate": "2024-03-30T10:45:00.000Z",
     "description": "Premium full face mask with VentiSeal technology for optimal leak prevention. Designed for severe and very severe COPD patients (GOLD 3-4) requiring high-pressure BiPAP therapy with close monitoring.",
     "price": 235.95,
-    "imageUrl": "https://images.unsplash.com/photo-1623152108144-47d1694e5c84?w=800&auto=format&fit=crop"
+    "imageUrl": "/images/F&PViteraAdvancedFullfaceMask.jpeg"
   }
 ]
