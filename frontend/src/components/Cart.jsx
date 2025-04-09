@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Typography,
@@ -12,20 +12,74 @@ import {
   TableRow,
   IconButton,
   Button,
-  Grid
+  Grid,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
-import { Delete as DeleteIcon, Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import { Delete as DeleteIcon, Add as AddIcon, Remove as RemoveIcon, CheckCircleOutline } from '@mui/icons-material';
 import { useCart } from '../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import DeliveryAddressForm from './DeliveryAddressForm';
+import PaymentForm from './PaymentForm';
+import OrderSummary from './OrderSummary';
+
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, getTotalPrice } = useCart();
+  const { logout } = useAuth();
   const navigate = useNavigate();
+  const [deliveryAddress, setDeliveryAddress] = useState(null);
+  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [successDialog, setSuccessDialog] = useState(false);
 
-  const handleCheckout = () => {
-    // Here you would typically handle the checkout process
-    // For now, we'll just navigate to a success page
-    navigate('/checkout-success');
+  const handleCheckout = async () => {
+    if (!deliveryAddress || !paymentDetails) {
+      setSnackbar({
+        open: true,
+        message: 'Please fill in all required fields',
+        severity: 'error'
+      });
+      return;
+    }
+
+    try {
+      const orderData = {
+        items: cart,
+        total: getTotalPrice(),
+        deliveryAddress,
+        paymentDetails: {
+          cardNumber: paymentDetails.cardNumber.slice(-4),
+          cardHolder: paymentDetails.cardHolder,
+          expiryDate: paymentDetails.expiryDate
+        }
+      };
+      
+      // Show success dialog
+      setSuccessDialog(true);
+      
+      // Close dialog, logout, and navigate after 10 seconds
+      setTimeout(async () => {
+        setSuccessDialog(false);
+        try {
+          await logout();
+          navigate('/login');
+        } catch (error) {
+          console.error('Logout failed:', error);
+        }
+      }, 10000);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'Failed to process checkout. Please try again.',
+        severity: 'error'
+      });
+    }
   };
 
   if (cart.length === 0) {
@@ -53,24 +107,24 @@ const Cart = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: '#2196f3', fontWeight: 600, mb: 3 }}>
         Shopping Cart
       </Typography>
       
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ mb: 3, boxShadow: 3 }}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Product</TableCell>
-              <TableCell align="right">Price</TableCell>
-              <TableCell align="center">Quantity</TableCell>
-              <TableCell align="right">Total</TableCell>
-              <TableCell align="right">Actions</TableCell>
+            <TableRow sx={{ backgroundColor: '#2196f3' }}>
+              <TableCell sx={{ color: 'white', fontWeight: 600 }}>Product</TableCell>
+              <TableCell align="right" sx={{ color: 'white', fontWeight: 600 }}>Price</TableCell>
+              <TableCell align="center" sx={{ color: 'white', fontWeight: 600 }}>Quantity</TableCell>
+              <TableCell align="right" sx={{ color: 'white', fontWeight: 600 }}>Total</TableCell>
+              <TableCell align="right" sx={{ color: 'white', fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {cart.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <img
@@ -78,28 +132,30 @@ const Cart = () => {
                       alt={item.maskType}
                       style={{ width: 50, height: 50, marginRight: 16, objectFit: 'contain' }}
                     />
-                    <Typography variant="body1">{item.maskType}</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>{item.maskType}</Typography>
                   </Box>
                 </TableCell>
-                <TableCell align="right">${item.price.toFixed(2)}</TableCell>
+                <TableCell align="right" sx={{ color: '#2196f3', fontWeight: 500 }}>$${Number(item.price).toFixed(2)}</TableCell>
                 <TableCell align="center">
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <IconButton
                       size="small"
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      sx={{ color: '#2196f3' }}
                     >
                       <RemoveIcon />
                     </IconButton>
-                    <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
+                    <Typography sx={{ mx: 2, fontWeight: 500 }}>{item.quantity}</Typography>
                     <IconButton
                       size="small"
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      sx={{ color: '#2196f3' }}
                     >
                       <AddIcon />
                     </IconButton>
                   </Box>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="right" sx={{ color: '#2196f3', fontWeight: 500 }}>
                   ${(item.price * item.quantity).toFixed(2)}
                 </TableCell>
                 <TableCell align="right">
@@ -116,36 +172,76 @@ const Cart = () => {
         </Table>
       </TableContainer>
 
-      <Grid container justifyContent="flex-end" sx={{ mt: 3 }}>
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Order Summary
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-              <Typography>Subtotal</Typography>
-              <Typography>${getTotalPrice().toFixed(2)}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-              <Typography>Shipping</Typography>
-              <Typography>Free</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-              <Typography variant="h6">Total</Typography>
-              <Typography variant="h6">${getTotalPrice().toFixed(2)}</Typography>
-            </Box>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 3, mb: 3, boxShadow: 3 }}>
+            <DeliveryAddressForm onAddressChange={setDeliveryAddress} />
+          </Paper>
+          <Paper sx={{ p: 3, mb: 3, boxShadow: 3 }}>
+            <PaymentForm onPaymentChange={setPaymentDetails} />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <OrderSummary subtotal={getTotalPrice()} />
+          <Box sx={{ mt: 2 }}>
             <Button
               fullWidth
               variant="contained"
               color="primary"
               size="large"
               onClick={handleCheckout}
+              sx={{ 
+                py: 1.5, 
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                backgroundColor: '#2196f3',
+                '&:hover': {
+                  backgroundColor: '#1976d2'
+                }
+              }}
             >
-              Proceed to Checkout
+              Complete Checkout
             </Button>
-          </Paper>
+          </Box>
         </Grid>
       </Grid>
+
+      <Dialog
+        open={successDialog}
+        aria-labelledby="order-success-dialog"
+        sx={{
+          '& .MuiDialog-paper': {
+            borderRadius: 2,
+            padding: 2,
+            minWidth: 300
+          }
+        }}
+      >
+        <DialogTitle sx={{ textAlign: 'center', color: '#2196f3' }}>
+          <CheckCircleOutline sx={{ fontSize: 60, color: '#4caf50', mb: 2 }} />
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Order Confirmed!
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" sx={{ textAlign: 'center', mb: 2 }}>
+            Thank you for your purchase!
+          </Typography>
+          <Typography variant="body1" sx={{ textAlign: 'center', color: '#666' }}>
+            Your order details and receipt will be emailed to you shortly.
+          </Typography>
+        </DialogContent>
+      </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

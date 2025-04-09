@@ -65,7 +65,7 @@ const Dashboard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState('all');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
-  const { addToCart } = useCart();
+  const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
   const [masks, setMasks] = useState([])
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const Dashboard = () => {
         // Only fetch test results if user is authenticated
         if (user && localStorage.getItem('token')) {
           await fetchTestResults();
-          await fetchMasks();
+        await fetchMasks();
         }
       } catch (err) {
         console.error('Error loading data:', err);
@@ -131,10 +131,10 @@ const Dashboard = () => {
     try {
       // Update local state
       const updatedMasks = masks.map(m => 
-        m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
+          m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
       );
       setMasks(updatedMasks);
-
+      
       // Add to cart
       addToCart(mask);
 
@@ -520,21 +520,21 @@ const Dashboard = () => {
                     {mask.description}
                   </Typography>
                   <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-                    ${mask.price}
-                  </Typography>
+                      ${mask.price}
+                    </Typography>
                   <Typography variant="body2" color={mask.stock > 0 ? 'success.main' : 'error.main'}>
                     {mask.stock > 0 ? `${mask.stock} in stock` : 'Out of stock'}
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button
+                    <Button
                     size="small"
-                    color="primary"
-                    onClick={() => handleAddToCart(mask)}
+                      color="primary"
+                      onClick={() => handleAddToCart(mask)}
                     disabled={mask.stock <= 0}
-                  >
-                    Add to Cart
-                  </Button>
+                    >
+                      Add to Cart
+                    </Button>
                 </CardActions>
               </Card>
             </Grid>

@@ -56,12 +56,12 @@ const OtherMasks = () => {
       // First add to cart to ensure the item is properly formatted
       const cartItem = {
         id: mask.id,
-        maskType: mask.name,
+        maskType: mask.maskType,
         description: mask.description,
-        imageUrl: mask.image,
-        price: mask.price,
+        imageUrl: mask.imageUrl,
+        price: Number(mask.price),
         stock: mask.stock
-      };
+    };
       addToCart(cartItem);
 
       // Then update stock on backend
