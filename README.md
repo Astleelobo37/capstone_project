@@ -67,21 +67,84 @@ The application will be available at:
 
 Create a `.env` file in the backend directory with the following variables:
 ```
-MONGODB_URI=mongodb://localhost:27017/healthcare_portal
-JWT_SECRET=your-secret-key
-PORT=5000
 ```
 
 ## Technologies Used
 
-- Frontend:
-  - React
-  - React Router
-  - CSS3
+Frontend Dependencies (from package.json):
+React
+React Router DOM
+Material-UI (MUI)
+Axios
+React Context API
+Vite (build tool)
 
-- Backend:
-  - Node.js
-  - Express
-  - MongoDB
-  - JWT Authentication
-  - Multer (File Upload)
+Backend Dependencies:
+Express.js
+MySQL
+Sequelize ORM
+JWT (JSON Web Tokens)
+Bcrypt
+CORS
+Dotenv
+
+Database:
+MySQL
+UI Components (Material-UI):
+Box
+Container
+Grid
+Card
+CardMedia
+CardContent
+CardActions
+Typography
+Button
+TextField
+Snackbar
+Alert
+CircularProgress
+Paper
+AppBar
+Toolbar
+IconButton
+Badge
+Divider
+List
+ListItem
+ListItemText
+ListItemSecondaryAction
+Chip
+
+Icons (Material-UI Icons):
+ShoppingCart
+Person
+Logout
+
+
+Context Providers:
+AuthContext (for authentication)
+CartContext (for shopping cart)
+MaskContext (for mask data)
+API Endpoints:
+Authentication (login/register)
+Masks CRUD operations
+Cart operations
+User management
+
+Development Tools:
+Visual Studio Code
+MySQL Workbench
+Postman (for API testing)
+Git (for version control)
+
+Styling:
+Material-UI styling system
+CSS-in-JS (styled-components)
+Custom theme configuration
+Security Features:
+JWT authentication
+Password hashing
+Protected routes
+CORS configuration
+Environment variables
