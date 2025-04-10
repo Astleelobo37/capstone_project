@@ -297,7 +297,7 @@
       "orderDate": "2024-02-14T08:30:00.000Z",
       "description": "Compact full face mask for high-pressure BiPAP users, featuring UltraCompact cushions for minimal facial contact.",
       "price": 219.00,
-      "imageUrl": "/images/ResMedAirFitF30.jpeg",
+      "imageUrl": "/images/ResMedAirFitF30FullFaceMask.jpeg",
       "manufacturer": "ResMed",
       "severity": "Gold 3"
     },
@@ -309,7 +309,7 @@
       "orderDate": "2024-03-03T11:00:00.000Z",
       "description": "Minimal contact full face mask with top-of-head tubing, ideal for active sleepers requiring BiPAP therapy.",
       "price": 209.99,
-      "imageUrl": "/images/PhilipsDreamWearFullFace.jpeg",
+      "imageUrl": "/images/PhilipsDreamWearFullFaceMask.webp",
       "manufacturer": "Philips Respironics",
       "severity": "Gold 2"
     },
@@ -321,7 +321,7 @@
       "orderDate": "2024-01-21T09:15:00.000Z",
       "description": "High-performance full face mask with silicone cushion and forehead support for BiPAP compliance.",
       "price": 198.75,
-      "imageUrl": "/images/DeVilbissFlexSetFFM.jpeg",
+      "imageUrl": "/images/DeVilbissFlexSetFullFaceMask.jpeg",
       "manufacturer": "DeVilbiss",
       "severity": "Gold 3"
     },
@@ -333,7 +333,7 @@
       "orderDate": "2024-04-01T13:40:00.000Z",
       "description": "Low-profile mask covering the mouth and nose base, excellent for reducing red marks and discomfort.",
       "price": 225.50,
-      "imageUrl": "/images/AmaraViewFullFace.jpeg",
+      "imageUrl": "/images/ResMedAirFitF30FullFaceMask.jpeg",
       "manufacturer": "Philips Respironics",
       "severity": "Gold 4"
     },
@@ -345,7 +345,7 @@
       "orderDate": "2024-02-25T07:50:00.000Z",
       "description": "Ultra-light full face mask offering reliable seal for high BiPAP pressures in severe COPD patients.",
       "price": 230.25,
-      "imageUrl": "/images/ResMedQuattroAir.jpeg",
+      "imageUrl": "/images/ResMedQuattroAirullFaceMask.jpeg",
       "manufacturer": "ResMed",
       "severity": "Gold 4"
     },
@@ -357,7 +357,7 @@
       "orderDate": "2024-03-12T10:20:00.000Z",
       "description": "Total face coverage for users with facial irregularities or mouth leaks. Designed for stable BiPAP use.",
       "price": 245.00,
-      "imageUrl": "/images/PhilipsFitLifeTFM.jpeg",
+      "imageUrl": "/images/PhilipsFitLifeTotalFaceMask.jpeg",
       "manufacturer": "Philips Respironics",
       "severity": "Gold 4"
     },
@@ -369,7 +369,7 @@
       "orderDate": "2024-03-05T12:30:00.000Z",
       "description": "Adaptable forehead support with MicroFit dial for customizable fit. Suitable for moderate to severe COPD.",
       "price": 239.99,
-      "imageUrl": "/images/ResMedMirageQuattro.jpeg",
+      "imageUrl": "/images/ResMedMirageQuattroFullFaceMask.jpeg",
       "manufacturer": "ResMed",
       "severity": "Gold 3"
     },
@@ -381,7 +381,7 @@
       "orderDate": "2024-03-17T14:00:00.000Z",
       "description": "Stable full face mask with self-adjusting cushion, ideal for high leak-prone BiPAP therapy users.",
       "price": 189.00,
-      "imageUrl": "/images/InnoMedAspenFFM.jpeg",
+      "imageUrl": "/images/InnoMedAspenFullFaceMask.jpeg",
       "manufacturer": "InnoMed",
       "severity": "Gold 2"
     },
@@ -393,7 +393,7 @@
       "orderDate": "2024-04-02T08:15:00.000Z",
       "description": "Ergonomic mask for BiPAP support with low-pressure comfort seal and anti-asphyxia valve.",
       "price": 195.25,
-      "imageUrl": "/images/3BMedicalViva.jpeg",
+      "imageUrl": "/images/3B MedicalVivaFullFaceMask.jpeg",
       "manufacturer": "3B Medical",
       "severity": "Gold 3"
     },
@@ -405,7 +405,7 @@
       "orderDate": "2024-02-09T10:10:00.000Z",
       "description": "Simple full face design with adjustable headgear and silicone cushion, suitable for chronic use.",
       "price": 182.45,
-      "imageUrl": "/images/DriveComfortFit.jpeg",
+      "imageUrl": "/images/DriveFullFaceComfortFitMask.jpeg",
       "manufacturer": "Drive Medical",
       "severity": "Gold 2"
     },
@@ -417,7 +417,7 @@
       "orderDate": "2024-03-18T11:25:00.000Z",
       "description": "Full coverage mask designed for patients with facial hair or irregular features. Long-term durability.",
       "price": 215.00,
-      "imageUrl": "/images/HansRudolph7600V2.jpeg",
+      "imageUrl": "/images/HansRudolph7600V2FullFaceMask.jpeg",
       "manufacturer": "Hans Rudolph",
       "severity": "Gold 4"
     },
@@ -429,7 +429,7 @@
       "orderDate": "2024-01-28T09:05:00.000Z",
       "description": "Soft cloth-based full face mask to minimize skin irritation. Ideal for sensitive BiPAP users.",
       "price": 202.99,
-      "imageUrl": "/images/SleepWeaverAnew.jpeg",
+      "imageUrl": "/images/CircadianceSleeWeaver.jpeg",
       "manufacturer": "Circadiance",
       "severity": "Gold 3"
     },
@@ -441,7 +441,7 @@
       "orderDate": "2024-04-04T15:45:00.000Z",
       "description": "Lightweight BiPAP mask with double-layered silicone seal for high adherence in active users.",
       "price": 185.00,
-      "imageUrl": "/images/BMCiVolveF2.jpeg",
+      "imageUrl": "/images/BMCiVolve.jpeg",
       "manufacturer": "BMC Medical",
       "severity": "Gold 3"
     },
@@ -453,7 +453,7 @@
       "orderDate": "2024-02-19T13:00:00.000Z",
       "description": "Affordable yet reliable full face mask, perfect for home use in chronic respiratory conditions.",
       "price": 172.50,
-      "imageUrl": "/images/SunsetFullFace.jpeg",
+      "imageUrl": "/images/SunsetFullFaceMask.jpeg",
       "manufacturer": "Sunset Healthcare",
       "severity": "Gold 2"
     },
