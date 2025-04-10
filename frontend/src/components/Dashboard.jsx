@@ -36,6 +36,7 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { useMasks } from '../contexts/MaskContext';
 import { useCart } from '../contexts/CartContext';
+import { MaskGrid } from './MaskGrid';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -107,7 +108,7 @@ const Dashboard = () => {
   const fetchMasks = async () => {
 
     try {
-      const response = await axios.get(`/api/masks`);
+      const response = await axios.get(`/api/masks/?manufacturer=Fisher & Paykel`);
       
       if (response.data) {
         setMasks(response.data);
@@ -501,46 +502,7 @@ const Dashboard = () => {
           </FormControl>
         </Box>
 
-        <Grid container spacing={3}>
-          {filterMasksBySeverity(masks).map((mask) => (
-            <Grid item key={mask.id} size={{xs:12,sm:6,md:4,lg:3}}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={mask.imageUrl}
-                  alt={mask.maskType}
-                  sx={{ objectFit: 'contain', p: 1 }}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h6" component="div">
-                    {mask.maskType}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {mask.description}
-                  </Typography>
-                  <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-                      ${mask.price}
-                    </Typography>
-                  <Typography variant="body2" color={mask.stock > 0 ? 'success.main' : 'error.main'}>
-                    {mask.stock > 0 ? `${mask.stock} in stock` : 'Out of stock'}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button
-                    size="small"
-                      color="primary"
-                      onClick={() => handleAddToCart(mask)}
-                    disabled={mask.stock <= 0}
-                    >
-                      Add to Cart
-                    </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-
+        <MaskGrid masks={masks} filterfunction = {filterMasksBySeverity} />
         <Snackbar
           open={snackbar.open}
           autoHideDuration={3000}

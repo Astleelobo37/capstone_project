@@ -124,6 +124,8 @@ async function loadMasks() {
             description: result.description,
             price: result.price,
             imageUrl: result.imageUrl,
+            severity: result.severity,
+            manufacturer: result.manufacturer
         }));
     } catch (error) {
         console.error("Error loading mask results:", error);

@@ -41,6 +41,14 @@ const Mask = sequelize.define('Masks', {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'image_url'
+    },
+    severity: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    manufacturer: {
+        type: DataTypes.STRING,
+        allowNull: true,
     }
 }, {
     timestamps: true,

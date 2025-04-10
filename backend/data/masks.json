@@ -7,7 +7,9 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 1 - seamlessly cushions your nose for comfort, while providing stability and performance for a natural sleep experience",
     "price": 159.99,
-    "imageUrl": "/images/F&PNovaMicroPillowMask.png"
+    "imageUrl": "/images/F&PNovaMicroPillowMask.png",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 1"
   },
   {
     "id": 2,
@@ -17,7 +19,9 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 2 - The humidifier features Ambient Tracking PLUS Technology that auto-adjusts humidification levels for a better night sleep",
     "price": 2224.99,
-    "imageUrl": "/images/hc254autocpapmachine.jpg"
+    "imageUrl": "/images/hc254autocpapmachine.jpg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 2"
   },
   {
     "id": 3,
@@ -27,7 +31,10 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 3 - Severe: FFP2 Medical Grade Mask with enhanced protection",
     "price": 34.99,
-    "imageUrl": "/images/brevida.jpeg"
+    "imageUrl": "/images/brevida.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 3"
+
   },
   {
     "id": 4,
@@ -37,7 +44,9 @@
     "orderDate": "2024-04-05",
     "description": "GOLD 4 - The F&P SleepStyle™+ combines refined functionality with advanced technology to give you the freedom to sleep",
     "price": 3999.99,
-    "imageUrl": "/images/sleepstyle+CPAP.webp"
+    "imageUrl": "/images/sleepstyle+CPAP.webp",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 5,
@@ -47,7 +56,9 @@
     "orderDate": "2023-12-15T08:30:00.000Z",
     "description": "Full face CPAP mask with RollFit seal technology for treating severe COPD. Suitable for GOLD 3-4 stage patients requiring high-pressure support.",
     "price": 189.99,
-    "imageUrl": "/images/simplus.jpeg"
+    "imageUrl": "/images/simplus.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 6,
@@ -57,7 +68,9 @@
     "orderDate": "2024-01-10T10:15:00.000Z",
     "description": "Compact nasal mask with CapFit headgear. Ideal for mild to moderate COPD (GOLD 1-2) patients who require overnight oxygen support.",
     "price": 129.95,
-    "imageUrl": "/images/EvoraNasal.jpeg"
+    "imageUrl": "/images/EvoraNasal.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 2"
   },
   {
     "id": 7,
@@ -67,7 +80,9 @@
     "orderDate": "2024-02-05T14:45:00.000Z",
     "description": "Full face mask with stability bar for high-pressure NIV therapy. Recommended for severe COPD exacerbations and GOLD 3-4 patients.",
     "price": 199.5,
-    "imageUrl": "/images/Viteria.jpeg"
+    "imageUrl": "/images/Viteria.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 3"
   },
   {
     "id": 8,
@@ -77,7 +92,9 @@
     "orderDate": "2024-01-22T09:30:00.000Z",
     "description": "Minimally invasive nasal pillows with AirPillow seal. Best for GOLD 1-2 COPD patients who experience claustrophobia with larger masks.",
     "price": 119.99,
-    "imageUrl": "/images/F&PBrevidaNasalPillowMask.jpeg"
+    "imageUrl": "/images/F&PBrevidaNasalPillowMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 2"
   },
   {
     "id": 9,
@@ -85,9 +102,11 @@
     "stock": 15,
     "serialNumber": "FP-FFM-EVO-98765",
     "orderDate": "2024-03-01T11:20:00.000Z",
-    "description": "Compact full face mask with dynamic support. Designed for COPD patients requiring 24-hour ventilation support with minimal pressure points.",
+    "description": "Compact full face mask with dynamic support. Gold 4 - Designed for COPD patients requiring 24-hour ventilation support with minimal pressure points.",
     "price": 209.95,
-    "imageUrl": "/images/EvoraFull.jpeg"
+    "imageUrl": "/images/EvoraFull.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 10,
@@ -97,7 +116,9 @@
     "orderDate": "2023-11-28T13:10:00.000Z",
     "description": "Nasal mask with RollFit seal and easy-fit headgear. Appropriate for moderate COPD patients (GOLD 2-3) requiring nighttime ventilation.",
     "price": 139.5,
-    "imageUrl": "/images/Eason2.jpeg"
+    "imageUrl": "/images/Eason2.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 2"
   },
   {
     "id": 11,
@@ -105,9 +126,11 @@
     "stock": 12,
     "serialNumber": "FP-OM-ORC-56723",
     "orderDate": "2024-02-18T15:45:00.000Z",
-    "description": "Specialized oral-only interface for COPD patients who are unable to breathe through their nose or have nasal obstruction. Compatible with BiPAP therapy.",
+    "description": "Specialized oral-only interface for COPD patients who are unable to breathe through their nose or have nasal obstruction. Gold 3 - Compatible with BiPAP therapy.",
     "price": 179.99,
-    "imageUrl": "/images/OracleHC452.jpeg"
+    "imageUrl": "/images/OracleHC452.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 3"
   },
   {
     "id": 12,
@@ -115,9 +138,11 @@
     "stock": 8,
     "serialNumber": "FP-HNM-NIV-78901",
     "orderDate": "2024-03-15T09:15:00.000Z",
-    "description": "Hospital-grade non-vented NIV mask for acute COPD exacerbation treatment. Designed for intensive care settings with anti-asphyxiation valve.",
+    "description": "Hospital-grade non-vented NIV mask for acute COPD exacerbation treatment. Gold 4 - Designed for intensive care settings with anti-asphyxiation valve.",
     "price": 275.0,
-    "imageUrl": "/images/F&PNivairoHospitalNIVMask.jpeg"
+    "imageUrl": "/images/F&PNivairoHospitalNIVMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 13,
@@ -127,7 +152,9 @@
     "orderDate": "2023-10-10T14:20:00.000Z",
     "description": "Ultra-lightweight nasal pillows system with auto-adjusting AirPillow seal. Suitable for GOLD 1-2 COPD patients who are active sleepers.",
     "price": 124.95,
-    "imageUrl": "/images/PilairoQ.jpeg"
+    "imageUrl": "/images/PilairoQ.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 2"
   },
   {
     "id": 14,
@@ -137,7 +164,9 @@
     "orderDate": "2024-01-05T16:30:00.000Z",
     "description": "Hospital-grade full face mask with under-chin design for severe COPD patients (GOLD 4) requiring continuous mechanical ventilation during exacerbations.",
     "price": 249.99,
-    "imageUrl": "/images/F&PFlexiFit432FullFaceHospitalMask.jpeg"
+    "imageUrl": "/images/F&PFlexiFit432FullFaceHospitalMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 15,
@@ -147,7 +176,9 @@
     "orderDate": "2024-03-10T08:45:00.000Z",
     "description": "Full face mask with FlexiFoam cushion technology providing enhanced seal for GOLD 3-4 COPD patients who move frequently during sleep.",
     "price": 195.5,
-    "imageUrl": "/images/F&PFormaFullFaceMask.jpeg"
+    "imageUrl": "/images/F&PFormaFullFaceMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 3"
   },
   {
     "id": 16,
@@ -157,7 +188,9 @@
     "orderDate": "2023-11-15T13:20:00.000Z",
     "description": "Compact nasal mask with premium headgear and frosted silicone seal. Ideal for moderate COPD patients (GOLD 2) requiring consistent nightly therapy.",
     "price": 134.99,
-    "imageUrl": "/images/zest.jpeg"
+    "imageUrl": "/images/zest.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 2"
   },
   {
     "id": 17,
@@ -165,9 +198,11 @@
     "stock": 5,
     "serialNumber": "FP-HVM-RT45-12345",
     "orderDate": "2024-02-28T16:00:00.000Z",
-    "description": "Specialized hospital ventilation mask with multiple ports for severe acute COPD exacerbations. Designed for ICU/emergency department use with high-flow oxygen.",
+    "description": "Specialized hospital ventilation mask with multiple ports for severe acute COPD exacerbations. Gold 4 - Designed for ICU/emergency department use with high-flow oxygen.",
     "price": 295.0,
-    "imageUrl": "/images/F&PRT045HospitalVentilationMask.jpeg"
+    "imageUrl": "/images/F&PRT045HospitalVentilationMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 18,
@@ -177,7 +212,9 @@
     "orderDate": "2024-03-20T10:30:00.000Z",
     "description": "Ultra-compact nasal mask with minimal contact designed for GOLD 1-2 COPD patients who are new to therapy or have mild symptoms only.",
     "price": 149.95,
-    "imageUrl": "/images/EvoraNanoNasalMask.jpeg"
+    "imageUrl": "/images/EvoraNanoNasalMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 1"
   },
   {
     "id": 19,
@@ -187,7 +224,9 @@
     "orderDate": "2024-01-15T09:45:00.000Z",
     "description": "Advanced hospital full face NIV mask with interchangeable seals for acute respiratory failure in end-stage COPD (GOLD 4). Features adjustable forehead support.",
     "price": 325.0,
-    "imageUrl": "/images/F&PVisairoHospitalNIVFullFaceMask.png"
+    "imageUrl": "/images/F&PVisairoHospitalNIVFullFaceMask.png",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 20,
@@ -197,7 +236,9 @@
     "orderDate": "2023-12-05T11:15:00.000Z",
     "description": "360-degree rotating nasal pillows with minimalist headgear. Perfect for early-stage COPD patients (GOLD 1) who require occasional nighttime oxygen support.",
     "price": 135.5,
-    "imageUrl": "/images/F&POpus360NasalPillowsMask.jpeg"
+    "imageUrl": "/images/F&POpus360NasalPillowsMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 1"
   },
   {
     "id": 21,
@@ -207,7 +248,9 @@
     "orderDate": "2024-02-10T14:00:00.000Z",
     "description": "Total face ventilation mask covering eyes, nose and mouth for severe COPD patients (GOLD 4) with facial skin breakdown from conventional masks. Hospital use.",
     "price": 349.99,
-    "imageUrl": "/images/F&PF1totalFaceMask.jpeg"
+    "imageUrl": "/images/F&PF1totalFaceMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
   },
   {
     "id": 22,
@@ -217,7 +260,9 @@
     "orderDate": "2024-03-25T09:00:00.000Z",
     "description": "Latest generation nasal mask with enhanced RollFit+ seal technology. Suitable for GOLD 2-3 COPD patients requiring consistent CPAP/BiPAP therapy.",
     "price": 159.95,
-    "imageUrl": "/images/F&PEson3NasalMask.jpeg"
+    "imageUrl": "/images/F&PEson3NasalMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 3"
   },
   {
     "id": 23,
@@ -225,9 +270,11 @@
     "stock": 8,
     "serialNumber": "FP-PHNM-RT46-75319",
     "orderDate": "2024-01-30T15:30:00.000Z",
-    "description": "Specialized pediatric hospital NIV mask for younger COPD patients (rare juvenile cases) or small adults with difficult fit issues.",
+    "description": "Gold 1 - Specialized pediatric hospital NIV mask for younger COPD patients (rare juvenile cases) or small adults with difficult fit issues.",
     "price": 265.0,
-    "imageUrl": "/images/F&PRT046PediatricHospitalNIVMask.jpeg"
+    "imageUrl": "/images/F&PRT046PediatricHospitalNIVMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 1"
   },
   {
     "id": 24,
@@ -237,6 +284,191 @@
     "orderDate": "2024-03-30T10:45:00.000Z",
     "description": "Premium full face mask with VentiSeal technology for optimal leak prevention. Designed for severe and very severe COPD patients (GOLD 3-4) requiring high-pressure BiPAP therapy with close monitoring.",
     "price": 235.95,
-    "imageUrl": "/images/F&PViteraAdvancedFullfaceMask.jpeg"
-  }
+    "imageUrl": "/images/F&PViteraAdvancedFullfaceMask.jpeg",
+    "manufacturer":"Fisher & Paykel",
+    "severity":"Gold 4"
+  },
+
+    {
+      "id": 25,
+      "maskType": "ResMed AirFit F30 Full Face Mask",
+      "stock": 18,
+      "serialNumber": "RM-FFM-F30-10001",
+      "orderDate": "2024-02-14T08:30:00.000Z",
+      "description": "Compact full face mask for high-pressure BiPAP users, featuring UltraCompact cushions for minimal facial contact.",
+      "price": 219.00,
+      "imageUrl": "/images/ResMedAirFitF30.jpeg",
+      "manufacturer": "ResMed",
+      "severity": "Gold 3"
+    },
+    {
+      "id": 26,
+      "maskType": "Philips DreamWear Full Face Mask",
+      "stock": 15,
+      "serialNumber": "PH-FFM-DWFF-23456",
+      "orderDate": "2024-03-03T11:00:00.000Z",
+      "description": "Minimal contact full face mask with top-of-head tubing, ideal for active sleepers requiring BiPAP therapy.",
+      "price": 209.99,
+      "imageUrl": "/images/PhilipsDreamWearFullFace.jpeg",
+      "manufacturer": "Philips Respironics",
+      "severity": "Gold 2"
+    },
+    {
+      "id": 27,
+      "maskType": "DeVilbiss FlexSet Full Face Mask",
+      "stock": 10,
+      "serialNumber": "DV-FFM-FLEX-30123",
+      "orderDate": "2024-01-21T09:15:00.000Z",
+      "description": "High-performance full face mask with silicone cushion and forehead support for BiPAP compliance.",
+      "price": 198.75,
+      "imageUrl": "/images/DeVilbissFlexSetFFM.jpeg",
+      "manufacturer": "DeVilbiss",
+      "severity": "Gold 3"
+    },
+    {
+      "id": 28,
+      "maskType": "Respironics Amara View Full Face Mask",
+      "stock": 14,
+      "serialNumber": "PH-FFM-AMV-44567",
+      "orderDate": "2024-04-01T13:40:00.000Z",
+      "description": "Low-profile mask covering the mouth and nose base, excellent for reducing red marks and discomfort.",
+      "price": 225.50,
+      "imageUrl": "/images/AmaraViewFullFace.jpeg",
+      "manufacturer": "Philips Respironics",
+      "severity": "Gold 4"
+    },
+    {
+      "id": 29,
+      "maskType": "ResMed Quattro Air Full Face Mask",
+      "stock": 11,
+      "serialNumber": "RM-FFM-QA-55678",
+      "orderDate": "2024-02-25T07:50:00.000Z",
+      "description": "Ultra-light full face mask offering reliable seal for high BiPAP pressures in severe COPD patients.",
+      "price": 230.25,
+      "imageUrl": "/images/ResMedQuattroAir.jpeg",
+      "manufacturer": "ResMed",
+      "severity": "Gold 4"
+    },
+    {
+      "id": 30,
+      "maskType": "Philips FitLife Total Face Mask",
+      "stock": 7,
+      "serialNumber": "PH-FFM-FL-66789",
+      "orderDate": "2024-03-12T10:20:00.000Z",
+      "description": "Total face coverage for users with facial irregularities or mouth leaks. Designed for stable BiPAP use.",
+      "price": 245.00,
+      "imageUrl": "/images/PhilipsFitLifeTFM.jpeg",
+      "manufacturer": "Philips Respironics",
+      "severity": "Gold 4"
+    },
+    {
+      "id": 31,
+      "maskType": "ResMed Mirage Quattro Full Face Mask",
+      "stock": 20,
+      "serialNumber": "RM-FFM-MQ-77890",
+      "orderDate": "2024-03-05T12:30:00.000Z",
+      "description": "Adaptable forehead support with MicroFit dial for customizable fit. Suitable for moderate to severe COPD.",
+      "price": 239.99,
+      "imageUrl": "/images/ResMedMirageQuattro.jpeg",
+      "manufacturer": "ResMed",
+      "severity": "Gold 3"
+    },
+    {
+      "id": 32,
+      "maskType": "InnoMed Aspen Full Face Mask",
+      "stock": 8,
+      "serialNumber": "IM-FFM-ASP-88901",
+      "orderDate": "2024-03-17T14:00:00.000Z",
+      "description": "Stable full face mask with self-adjusting cushion, ideal for high leak-prone BiPAP therapy users.",
+      "price": 189.00,
+      "imageUrl": "/images/InnoMedAspenFFM.jpeg",
+      "manufacturer": "InnoMed",
+      "severity": "Gold 2"
+    },
+    {
+      "id": 33,
+      "maskType": "3B Medical Viva Full Face Mask",
+      "stock": 12,
+      "serialNumber": "3B-FFM-VIVA-90123",
+      "orderDate": "2024-04-02T08:15:00.000Z",
+      "description": "Ergonomic mask for BiPAP support with low-pressure comfort seal and anti-asphyxia valve.",
+      "price": 195.25,
+      "imageUrl": "/images/3BMedicalViva.jpeg",
+      "manufacturer": "3B Medical",
+      "severity": "Gold 3"
+    },
+    {
+      "id": 34,
+      "maskType": "Drive Full Face Comfort Fit Mask",
+      "stock": 9,
+      "serialNumber": "DR-FFM-CFT-12456",
+      "orderDate": "2024-02-09T10:10:00.000Z",
+      "description": "Simple full face design with adjustable headgear and silicone cushion, suitable for chronic use.",
+      "price": 182.45,
+      "imageUrl": "/images/DriveComfortFit.jpeg",
+      "manufacturer": "Drive Medical",
+      "severity": "Gold 2"
+    },
+    {
+      "id": 35,
+      "maskType": "Hans Rudolph 7600 V2 Full Face Mask",
+      "stock": 6,
+      "serialNumber": "HR-FFM-7600V2-44512",
+      "orderDate": "2024-03-18T11:25:00.000Z",
+      "description": "Full coverage mask designed for patients with facial hair or irregular features. Long-term durability.",
+      "price": 215.00,
+      "imageUrl": "/images/HansRudolph7600V2.jpeg",
+      "manufacturer": "Hans Rudolph",
+      "severity": "Gold 4"
+    },
+    {
+      "id": 36,
+      "maskType": "Circadiance SleepWeaver Anew Full Face Mask",
+      "stock": 10,
+      "serialNumber": "CD-FFM-SWAN-33477",
+      "orderDate": "2024-01-28T09:05:00.000Z",
+      "description": "Soft cloth-based full face mask to minimize skin irritation. Ideal for sensitive BiPAP users.",
+      "price": 202.99,
+      "imageUrl": "/images/SleepWeaverAnew.jpeg",
+      "manufacturer": "Circadiance",
+      "severity": "Gold 3"
+    },
+    {
+      "id": 37,
+      "maskType": "BMC iVolve F2 Full Face Mask",
+      "stock": 17,
+      "serialNumber": "BMC-FFM-F2-90234",
+      "orderDate": "2024-04-04T15:45:00.000Z",
+      "description": "Lightweight BiPAP mask with double-layered silicone seal for high adherence in active users.",
+      "price": 185.00,
+      "imageUrl": "/images/BMCiVolveF2.jpeg",
+      "manufacturer": "BMC Medical",
+      "severity": "Gold 3"
+    },
+    {
+      "id": 38,
+      "maskType": "Sunset Full Face Mask with Headgear",
+      "stock": 16,
+      "serialNumber": "SS-FFM-HG-11345",
+      "orderDate": "2024-02-19T13:00:00.000Z",
+      "description": "Affordable yet reliable full face mask, perfect for home use in chronic respiratory conditions.",
+      "price": 172.50,
+      "imageUrl": "/images/SunsetFullFace.jpeg",
+      "manufacturer": "Sunset Healthcare",
+      "severity": "Gold 2"
+    },
+    {
+      "id": 39,
+      "maskType": "CareFusion PureSom Full Face Mask",
+      "stock": 13,
+      "serialNumber": "CF-FFM-PS-77881",
+      "orderDate": "2024-03-10T10:35:00.000Z",
+      "description": "Quiet vent design and wide field of view for comfortable, consistent BiPAP therapy.",
+      "price": 199.00,
+      "imageUrl": "/images/CareFusionPureSom.jpeg",
+      "manufacturer": "CareFusion",
+      "severity": "Gold 3"
+    }
+  
+  
 ]

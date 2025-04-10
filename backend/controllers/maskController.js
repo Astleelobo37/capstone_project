@@ -4,7 +4,8 @@ const Models = require("../models");
 const getAllMasks = async (req, res) => {
   try {
     console.log('Received request for all masks');
-    const masks = await Models.Mask.findAll({})
+console.log(req.query)
+    const masks = await Models.Mask.findAll({where:req.query})
     if (!masks || masks.length === 0) {
       console.log('No masks available');
       return res.status(200).json([]);
@@ -42,56 +43,10 @@ const getMaskById = async (req, res) => {
   }
 };
 
-// Get masks by severity
-const getMasksBySeverity = async (req, res) => {
-  try {
-    const severity = req.params.severity;
-    if (!severity) {
-      return res.status(400).json({ message: 'Severity parameter is required' });
-    }
-    
-    const filteredMasks = masks.filter(mask => 
-      mask.description.toLowerCase().includes(severity.toLowerCase())
-    );
-    return res.status(200).json(filteredMasks);
-  } catch (error) {
-    console.error('Error fetching masks by severity:', error);
-    return res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message 
-    });
-  }
-};
 
-// Get masks by price range
-const getMasksByPriceRange = async (req, res) => {
-  try {
-    const { min, max } = req.query;
-    if (!min || !max) {
-      return res.status(400).json({ message: 'Both min and max price are required' });
-    }
-    
-    const minPrice = parseFloat(min);
-    const maxPrice = parseFloat(max);
-    
-    if (isNaN(minPrice) || isNaN(maxPrice)) {
-      return res.status(400).json({ message: 'Invalid price range' });
-    }
-    
-    const filteredMasks = masks.filter(mask => 
-      mask.price >= minPrice && mask.price <= maxPrice
-    );
-    return res.status(200).json(filteredMasks);
-  } catch (error) {
-    console.error('Error fetching masks by price range:', error);
-    return res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message 
-    });
-  }
-};
 
-// Update mask stock
+
+// Update mask stock fix to use database properly
 const updateMaskStock = async (req, res) => {
   try {
     const maskId = parseInt(req.params.id);
@@ -129,7 +84,5 @@ const updateMaskStock = async (req, res) => {
 module.exports = {
   getAllMasks,
   getMaskById,
-  getMasksBySeverity,
-  getMasksByPriceRange,
   updateMaskStock
 }; 

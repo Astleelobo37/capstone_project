@@ -14,15 +14,7 @@ router.get('/:id', (req, res, next) => {
   maskController.getMaskById(req, res).catch(next);
 });
 
-router.get('/severity/:severity', (req, res, next) => {
-  console.log('GET /api/masks/severity/:severity route hit', req.params.severity);
-  maskController.getMasksBySeverity(req, res).catch(next);
-});
 
-router.get('/price-range', (req, res, next) => {
-  console.log('GET /api/masks/price-range route hit', req.query);
-  maskController.getMasksByPriceRange(req, res).catch(next);
-});
 
 // Protected route for updating mask stock
 router.put('/:id/stock', authController.verifyToken, (req, res, next) => {
