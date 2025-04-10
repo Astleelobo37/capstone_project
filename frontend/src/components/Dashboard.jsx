@@ -36,7 +36,6 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { useMasks } from '../contexts/MaskContext';
 import { useCart } from '../contexts/CartContext';
-import MaskGrid from './MaskGrid';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -541,11 +540,6 @@ const Dashboard = () => {
             </Grid>
           ))}
         </Grid>
-
-        <MaskGrid 
-          masks={fisherPaykelMasks} 
-          title="Fisher & Paykel Masks" 
-        />
 
         <Snackbar
           open={snackbar.open}

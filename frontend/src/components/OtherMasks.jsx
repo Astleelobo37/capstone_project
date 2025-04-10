@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Box, Typography } from '@mui/material';
 import { useMasks } from '../contexts/MaskContext';
-import MaskGrid from './MaskGrid';
 
 const OtherMasks = () => {
   const { masks, fetchMasks } = useMasks();
@@ -32,7 +31,7 @@ const OtherMasks = () => {
   return (
     <Container>
       <Box sx={{ py: 4 }}>
-        <MaskGrid masks={masks} title="Other Masks" />
+        {/* Original OtherMasks content here */}
       </Box>
     </Container>
   );
