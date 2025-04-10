@@ -1,11 +1,22 @@
 "use strict";
 const Models = require("../models");
+const { Op } = require('sequelize');
+function decodeQuery(query) {
+  return Object.fromEntries(
+    Object.entries(query).map(([key, value]) => {
+      const decoded = decodeURIComponent(value);
+      return decoded.startsWith('!')
+        ? [key, { [Op.not]: decoded.slice(1) }]
+        : [key, decoded];
+    })
+  );
+}
 // Get all masks
 const getAllMasks = async (req, res) => {
   try {
     console.log('Received request for all masks');
 console.log(req.query)
-    const masks = await Models.Mask.findAll({where:req.query})
+    const masks = await Models.Mask.findAll({where:decodeQuery(req.query)})
     if (!masks || masks.length === 0) {
       console.log('No masks available');
       return res.status(200).json([]);

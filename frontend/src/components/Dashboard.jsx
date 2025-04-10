@@ -108,7 +108,7 @@ const Dashboard = () => {
   const fetchMasks = async () => {
 
     try {
-      const response = await axios.get(`/api/masks/?manufacturer=Fisher & Paykel`);
+      const response = await axios.get(`/api/masks/?manufacturer=${encodeURIComponent("Fisher & Paykel")}`);
       
       if (response.data) {
         setMasks(response.data);

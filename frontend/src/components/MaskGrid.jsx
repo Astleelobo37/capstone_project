@@ -6,9 +6,10 @@ import { Card }  from "@mui/material";
 import { Grid }  from "@mui/material";
 
 export function MaskGrid({ masks, filterfunction }) {
+    const filteredmasks = filterfunction ? filterfunction(masks):masks;
   return (
     <Grid container spacing={3}>
-      {filterfunction(masks).map((mask) => (
+      {filteredmasks?.map((mask) => (
         <Grid item key={mask.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
           <Card
             sx={{ height: "100%", display: "flex", flexDirection: "column" }}

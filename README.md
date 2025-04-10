@@ -1,18 +1,19 @@
 # Healthcare Portal
 
-A web application for healthcare patients to upload test results and view respiratory masks from Fisher & Paykel Healthcare.
+A web application for healthcare patients to upload test results and view respiratory masks from Fisher & Paykel Healthcare and other masks as well.
 
 ## Features
 
 - User authentication (login/register)
 - Test result upload and management
 - View Fisher & Paykel respiratory masks
+- Other masks page to 
 - Responsive design
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
-- MongoDB
+- Sql workbench
 - npm or yarn
 
 ## Setup
@@ -43,10 +44,8 @@ mkdir uploads
 
 ## Running the Application
 
-1. Start MongoDB:
-```bash
-mongod
-```
+1. open SQL workbench
+port set to 4000
 
 2. Start the backend server:
 ```bash
@@ -61,8 +60,8 @@ npm start
 ```
 
 The application will be available at:
-- Frontend: http://localhost:3000
-- Backend: http://localhost:5000
+- Frontend: http://localhost:5173
+- Backend: http://localhost:4000
 
 ## Environment Variables
 

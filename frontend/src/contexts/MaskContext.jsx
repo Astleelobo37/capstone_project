@@ -10,9 +10,9 @@ export const MaskProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchMasks = async () => {
+  const fetchMasks = async (manufacturer) => {
     try {
-      const response = await axios.get('http://localhost:4000/api/masks');
+      const response = await axios.get(`/api/masks/?manufacturer=${encodeURIComponent(manufacturer)}`);
       setMasks(response.data);
       setError(null);
     } catch (err) {
@@ -24,7 +24,7 @@ export const MaskProvider = ({ children }) => {
 
   const updateMaskStock = async (maskId, newStock) => {
     try {
-      await axios.put(`http://localhost:4000/api/masks/${maskId}/stock`, {
+      await axios.put(`/api/masks/${maskId}/stock`, {
         stock: newStock
       }, {
         headers: {
