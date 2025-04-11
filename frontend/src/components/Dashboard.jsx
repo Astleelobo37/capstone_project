@@ -121,15 +121,15 @@ const Dashboard = () => {
 
   const handleAddToCart = (mask) => {
     try {
-      if (mask.stock <= 0) {
-        setSnackbar({
-          open: true,
+    if (mask.stock <= 0) {
+      setSnackbar({
+        open: true,
           message: 'Item is out of stock',
-          severity: 'error'
-        });
-        return;
-      }
-      
+        severity: 'error'
+      });
+      return;
+    }
+
       addToCart({
         id: mask.id,
         name: mask.maskType,
@@ -137,7 +137,7 @@ const Dashboard = () => {
         image: mask.imageUrl,
         stock: mask.stock
       });
-      
+
       setSnackbar({
         open: true,
         message: 'Item added to cart successfully',
@@ -483,7 +483,7 @@ const Dashboard = () => {
         <Typography variant="h5" gutterBottom align="center" sx={{ mb: 4 }}>
           Equipment We Provide
         </Typography>
-        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel>Filter by Severity</InputLabel>
             <Select
