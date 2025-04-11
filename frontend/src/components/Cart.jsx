@@ -104,6 +104,7 @@ const Cart = () => {
       </Container>
     );
   }
+  console.log(cart)
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -128,14 +129,14 @@ const Cart = () => {
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <img
-                      src={item.imageUrl}
-                      alt={item.maskType}
+                      src={item.image}
+                      alt={item.name}
                       style={{ width: 50, height: 50, marginRight: 16, objectFit: 'contain' }}
                     />
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>{item.maskType}</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>{item.name}</Typography>
                   </Box>
                 </TableCell>
-                <TableCell align="right" sx={{ color: '#2196f3', fontWeight: 500 }}>$${Number(item.price).toFixed(2)}</TableCell>
+                <TableCell align="right" sx={{ color: '#2196f3', fontWeight: 500 }}>${Number(item.price).toFixed(2)}</TableCell>
                 <TableCell align="center">
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <IconButton

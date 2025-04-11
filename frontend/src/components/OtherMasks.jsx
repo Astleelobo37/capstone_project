@@ -5,7 +5,7 @@ import { useCart } from '../contexts/CartContext';
 import { MaskGrid } from './MaskGrid';
 
 const OtherMasks = () => {
-  const { masks, fetchMasks, loading } = useMasks();
+  const { masks, loading } = useMasks();
   const { addToCart } = useCart();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
@@ -57,7 +57,7 @@ const OtherMasks = () => {
   return (
     <Container>
       <Box sx={{ py: 4 }}>
-        <MaskGrid masks={masks} handleAddToCart={handleAddToCart} />
+        <MaskGrid masks={masks} handleAddToCart={handleAddToCart} manufacturer="!Fisher & Paykel"/>
         <Snackbar
           open={snackbar.open}
           autoHideDuration={6000}

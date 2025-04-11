@@ -9,10 +9,12 @@ export const MaskProvider = ({ children }) => {
   const [masks, setMasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [manufacturer, setManufacturer] = useState(undefined);
 
-  const fetchMasks = async (manufacturer) => {
+  const fetchMasks = async () => {
     try {
-      const response = await axios.get(`/api/masks/?manufacturer=${encodeURIComponent(manufacturer)}`);
+      const manufacturerFilter = manufacturer ? `?manufacturer=${encodeURIComponent(manufacturer)}` : '';
+      const response = await axios.get(`/api/masks/${manufacturerFilter}`);
       setMasks(response.data);
       setError(null);
     } catch (err) {
@@ -48,10 +50,10 @@ export const MaskProvider = ({ children }) => {
 
   useEffect(() => {
     fetchMasks();
-  }, []);
+  }, [manufacturer]);
 
   return (
-    <MaskContext.Provider value={{ masks, loading, error, fetchMasks, updateMaskStock }}>
+    <MaskContext.Provider value={{ masks, loading, error, setManufacturer, updateMaskStock }}>
       {children}
     </MaskContext.Provider>
   );

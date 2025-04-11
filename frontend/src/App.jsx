@@ -14,7 +14,6 @@ import PrivateRoute from './components/PrivateRoute';
 import Chat from './components/Chat';
 import UploadResults from './components/UploadResults';
 import { Box } from '@mui/material';
-import './App.css'
 
 const theme = createTheme({
   palette: {

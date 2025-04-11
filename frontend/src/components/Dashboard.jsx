@@ -59,7 +59,6 @@ const severityColors = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { loading: masksLoading, error: masksError } = useMasks();
   const [testResults, setTestResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -67,7 +66,7 @@ const Dashboard = () => {
   const [filter, setFilter] = useState('all');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
   const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
-  const [masks, setMasks] = useState([])
+  const {masks} = useMasks();
 
   useEffect(() => {
     const loadData = async () => {
@@ -75,7 +74,6 @@ const Dashboard = () => {
         // Only fetch test results if user is authenticated
         if (user && localStorage.getItem('token')) {
           await fetchTestResults();
-        await fetchMasks();
         }
       } catch (err) {
         console.error('Error loading data:', err);
@@ -98,20 +96,6 @@ const Dashboard = () => {
       
       if (response.data) {
         setTestResults(response.data);
-      }
-    } catch (err) {
-      console.error('Error fetching test results:', err);
-      // Don't set error state for test results failure as it's not critical
-    }
-  };
-
-  const fetchMasks = async () => {
-
-    try {
-      const response = await axios.get(`/api/masks/?manufacturer=${encodeURIComponent("Fisher & Paykel")}`);
-      
-      if (response.data) {
-        setMasks(response.data);
       }
     } catch (err) {
       console.error('Error fetching test results:', err);
@@ -500,7 +484,7 @@ const Dashboard = () => {
           </FormControl>
         </Box>
 
-        <MaskGrid masks={masks} filterfunction={filterMasksBySeverity} handleAddToCart={handleAddToCart} />
+        <MaskGrid masks={masks} filterfunction={filterMasksBySeverity} handleAddToCart={handleAddToCart} manufacturer="Fisher & Paykel"/>
         <Snackbar
           open={snackbar.open}
           autoHideDuration={3000}
