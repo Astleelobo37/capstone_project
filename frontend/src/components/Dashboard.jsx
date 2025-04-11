@@ -119,36 +119,34 @@ const Dashboard = () => {
     }
   };
 
-  const handleAddToCart = async (mask) => {
-    if (mask.stock <= 0) {
-      setSnackbar({
-        open: true,
-        message: 'This item is out of stock',
-        severity: 'error'
-      });
-      return;
-    }
-
+  const handleAddToCart = (mask) => {
     try {
-      // Update local state
-      const updatedMasks = masks.map(m => 
-          m.id === mask.id ? { ...m, stock: m.stock - 1 } : m
-      );
-      setMasks(updatedMasks);
+      if (mask.stock <= 0) {
+        setSnackbar({
+          open: true,
+          message: 'Item is out of stock',
+          severity: 'error'
+        });
+        return;
+      }
       
-      // Add to cart
-      addToCart(mask);
-
+      addToCart({
+        id: mask.id,
+        name: mask.maskType,
+        price: mask.price,
+        image: mask.imageUrl,
+        stock: mask.stock
+      });
+      
       setSnackbar({
         open: true,
-        message: `${mask.maskType} added to cart`,
+        message: 'Item added to cart successfully',
         severity: 'success'
       });
-    } catch (err) {
-      console.error('Error adding to cart:', err);
+    } catch (error) {
       setSnackbar({
         open: true,
-        message: 'Failed to add item to cart. Please try again.',
+        message: 'Failed to add item to cart',
         severity: 'error'
       });
     }
@@ -502,7 +500,7 @@ const Dashboard = () => {
           </FormControl>
         </Box>
 
-        <MaskGrid masks={masks} filterfunction = {filterMasksBySeverity} />
+        <MaskGrid masks={masks} filterfunction={filterMasksBySeverity} handleAddToCart={handleAddToCart} />
         <Snackbar
           open={snackbar.open}
           autoHideDuration={3000}
